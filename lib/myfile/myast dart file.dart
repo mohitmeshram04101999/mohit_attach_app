@@ -1,6 +1,7 @@
 
 import "dart:ui";
 
+import "package:attach/myfile/customClips.dart";
 import "package:flutter/material.dart";
 import "package:attach/myfile/routanimationConfigration.dart";
 
@@ -76,12 +77,19 @@ Route createPageRoute(Widget Function(Animation,Animation) page,{RoutAnimationCo
     transitionDuration: configuration.transitioDuration,
     reverseTransitionDuration: configuration.reversDuration,
     pageBuilder: (context, animation, secondaryAnimation) => page(animation,secondaryAnimation),
+
+
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1.0, 0.0); // Start off the screen to the right
       const end = Offset.zero;
       const curve = Curves.easeInOut;
+      Curve? riversCurve;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: configuration.curve));
+      var _tweem = Tween(begin: begin,end: end).animate(CurvedAnimation(parent: animation, curve: curve,reverseCurve: riversCurve));
       var offsetAnimation = animation.drive(tween);
+      var curvedAnimation = CurvedAnimation(parent: animation, curve: curve,reverseCurve: riversCurve);
+
+
       return SlideTransition(
         position: offsetAnimation,
         child: child,
@@ -126,6 +134,33 @@ Route createPageRouteSlidRight(Widget Function(Animation,Animation) page,{RoutAn
       var offsetAnimation = animation.drive(tween);
       return SlideTransition(
         position: offsetAnimation,
+        child: child,
+      );
+    },
+  );
+}
+
+
+Route createPageRouteClipAnimation(Widget Function(Animation,Animation) page,{RoutAnimationConfiguration configuration = const RoutAnimationConfiguration()}) {
+  return PageRouteBuilder(
+    transitionDuration: configuration.transitioDuration,
+    reverseTransitionDuration: configuration.reversDuration,
+    pageBuilder: (context, animation, secondaryAnimation) => page(animation,secondaryAnimation),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0, 0); // Start off the screen to the right
+      const end = Offset.zero;
+      var size = MediaQuery.of(context).size;
+      const curve = Curves.easeInOut;
+      var tween = RectTween(
+
+          begin: configuration.clipBeginPosition??Rect.fromLTRB(0, 0, 0, 0),
+          end: Rect.fromLTWH(0,0,size.width,size.height),
+        //
+
+      ).animate(CurvedAnimation(parent: animation ,curve: configuration.curve));
+      // var offsetAnimation = animation.drive(tween);
+      return ClipPath(
+        clipper:CircleFromRectClipper(tween.value!),
         child: child,
       );
     },
@@ -221,6 +256,7 @@ enum RoutAnimation{
   slidUp,
   slidDown,
   slidRight,
+  clip,
 }
 
 
@@ -261,6 +297,11 @@ dynamic RoutTo(
   if(animation == RoutAnimation.slidRight)
   {
     result = await Navigator.of(context).push(createPageRouteSlidRight(child,configuration:configuration));
+  }
+  if(animation == RoutAnimation.clip)
+  {
+    print("this is page Rout ");
+    result = await Navigator.of(context).push(createPageRouteClipAnimation(child,configuration:configuration));
   }
   return result;
 }
@@ -305,6 +346,53 @@ dynamic ReplaceTo(BuildContext context,{
   if(animation == RoutAnimation.slidRight)
   {
     result = await Navigator.of(context).pushReplacement(createPageRouteSlidRight(child,configuration: configuration));
+  }
+  if(animation == RoutAnimation.clip)
+  {
+    result = await Navigator.of(context).pushReplacement(createPageRouteClipAnimation(child,configuration: configuration));
+  }
+  return result;
+}
+
+
+
+dynamic ReplaceAll(BuildContext context,{
+  required Widget Function(Animation,Animation) child,
+  RoutAnimation animation = RoutAnimation.fade,
+  RoutAnimationConfiguration configuration =const RoutAnimationConfiguration(),
+})async{
+  var result;
+  if(animation == RoutAnimation.fade)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRouteFade(child,configuration: configuration),(route) => false,);
+  }
+  if(animation == RoutAnimation.slid)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRoute(child,configuration: configuration),(route) => false,);
+  }
+  if(animation == RoutAnimation.scale)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRouteScale(child,configuration: configuration),(route) => false,);
+  }
+  if(animation == RoutAnimation.rotate)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRouteRotation(child,configuration: configuration),(route) => false,);
+  }
+  if(animation == RoutAnimation.slidDown)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRouteSlidDown(child,configuration: configuration),(route) => false,);
+  }
+  if(animation == RoutAnimation.slidUp)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRouteSlidUp(child,configuration: configuration),(route) => false,);
+  }
+  if(animation == RoutAnimation.slidRight)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRouteSlidRight(child,configuration: configuration),(route) => false,);
+  }
+  if(animation == RoutAnimation.clip)
+  {
+    result = await Navigator.of(context).pushAndRemoveUntil(createPageRouteClipAnimation(child,configuration: configuration),(route) => false,);
   }
   return result;
 }
@@ -718,6 +806,9 @@ class MyInkWell extends StatelessWidget {
     );
   }
 }
+
+
+
 
 
 

@@ -1,44 +1,241 @@
+
+import 'package:attach/bd/bg_main.dart';
 import 'package:attach/const/app_constante.dart';
-import 'package:attach/myfile/myast%20dart%20file.dart';
+import 'package:attach/firebase_options.dart';
+
 import 'package:attach/myfile/screen_dimension.dart';
-import 'package:attach/providers/audioCallProvider.dart';
-import 'package:attach/screens/on_bord_screen/on_board_main.dart';
+import 'package:attach/noticiation/notificationService.dart';
+import 'package:attach/noticiation/notificationservice/backgoundNotification%20handler.dart';
+import 'package:attach/providers/audio%20call%20provider.dart';
+
+import 'package:attach/providers/auth_provider.dart';
+import 'package:attach/providers/bank_account_provider.dart';
+import 'package:attach/providers/call_history_provider.dart';
+import 'package:attach/providers/chatListProvider.dart';
+import 'package:attach/providers/chatProvider.dart';
+import 'package:attach/providers/home_provider.dart';
+import 'package:attach/providers/home_provider_1.dart';
+import 'package:attach/providers/language_provider.dart';
+import 'package:attach/providers/listener_filer_provider.dart';
+import 'package:attach/providers/listner_profile_detail_provider.dart';
+import 'package:attach/providers/notification_provider.dart';
+import 'package:attach/providers/profileProvider.dart';
+import 'package:attach/providers/selfStoryProvider.dart';
+import 'package:attach/providers/story_provider.dart';
+import 'package:attach/providers/transection_history_provider.dart';
+import 'package:attach/providers/videoCallProvider.dart';
+import 'package:attach/screens/dash_board_screen/Home/home_screen.dart';
+
+
+import 'package:attach/screens/splash_screen.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+
 import 'package:provider/provider.dart';
 
-void main() {
+
+
+
+Future<void> waitForContext() async {
+  while (navigatorKey.currentState == null || !navigatorKey.currentState!.mounted) {
+    print("⏳ Waiting for context...");
+    await Future.delayed(Duration(milliseconds: 200)); // Wait and recheck
+  }
+  print("✅ Context is now ready!");
+}
+
+
+
+
+void main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
+
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+
+
+
+
+
+  const callChannel = MethodChannel('com.attachchat.app/call');
+
+  callChannel.setMethodCallHandler((call) async {
+    if (call.method == "showCallScreen") {
+
+      final data = call.arguments;
+      print("this is call argumant comming from nativ code $data");
+
+
+      // await waitForContext();
+
+      // Navigate to your call screen
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (_) => HomeScreen(), // your custom screen
+        ),
+      );
+    }
+  });
+
+
+
+
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  //
+  AwesomeNotifications().setListeners(
+    onActionReceivedMethod: _actionHande,
+    onDismissActionReceivedMethod: _actionHande,
+  );
+
+
+  //
+  ReceivedAction? initialAction =
+  await AwesomeNotifications().getInitialNotificationAction();
+
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => AudioCallProvider(),)
+      ChangeNotifierProvider(create: (context) => AudioCallProvider(),),
+      ChangeNotifierProvider(create: (context) => AuthProvider(),),
+      ChangeNotifierProvider(create: (context) => ProfileProvider(),),
+      ChangeNotifierProvider(create: (context) => LanguageProvider(),),
+      ChangeNotifierProvider(create: (context) => Socket_Provider(),),
+      ChangeNotifierProvider(create: (context) => BankProvider(),),
+      ChangeNotifierProvider(create: (context) => TransectionHistoryProvider(),),
+      ChangeNotifierProvider(create: (context) => HomeProvider(),),
+      ChangeNotifierProvider(create: (context) => ListenerProfileDetailProvider(),),
+      ChangeNotifierProvider(create: (context) => ChatProvider(),),
+      ChangeNotifierProvider(create: (context) => ChatListProvider(),),
+      ChangeNotifierProvider(create: (context) => VideoCallProvider(),),
+      ChangeNotifierProvider(create: (context) => StoryProvider(),),
+      ChangeNotifierProvider(create: (context) => ListenerFilterProvider(),),
+      ChangeNotifierProvider(create: (context) => SelfStoryProvider(),),
+      ChangeNotifierProvider(create: (context) => CallHistoryProvider(),),
+      ChangeNotifierProvider(create: (context) => NotificationProvider(),),
     ],
-      child: const MyApp()));
+      child:  MyApp(action: initialAction)));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ReceivedAction? action;
+  const MyApp({this.action,super.key});
 
 
   @override
   Widget build(BuildContext context) {
     SC.getScreen(context);
-    return MaterialApp(
 
+
+    return GetMaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
+
+      // routes: {
+      //   '/incoming_call':(context)=>IncomingCallScreen(
+      //   )
+      // },
 
 
 
 
       theme: ThemeData(
 
+        colorScheme: ColorScheme.dark(primary: Const.primeColor,
+        onPrimary: Colors.white),
+
+
+
+
+
+
+
+
+
+        indicatorColor: Colors.white,
+
+        datePickerTheme: DatePickerThemeData(
+
+
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side:BorderSide(color: Colors.white)
+          ),
+
+
+
+          
+          backgroundColor: Const.primeColor,
+
+          
+          // dayForegroundColor: WidgetStateColor.resolveWith((states) => Colors.white,),
+
+          
+
+          cancelButtonStyle: ButtonStyle(
+            foregroundColor: WidgetStateColor.resolveWith((states) => Const.yellow),
+            textStyle: WidgetStateProperty.resolveWith((states) => Const.font_700_14(context),)
+          ),
+
+          confirmButtonStyle: ButtonStyle(
+              foregroundColor: WidgetStateColor.resolveWith((states) => Const.yellow),
+              textStyle: WidgetStateProperty.resolveWith((states) => Const.font_700_14(context),)
+          ),
+            
+            
+            
+            todayForegroundColor: WidgetStateColor.resolveWith((states) => Colors.white,),
+          todayBorder: WidgetStateBorderSide.resolveWith((states) => BorderSide(width: 6,color: Const.yellow),),
+          // todayBackgroundColor: ,
+          
+          
+          // dayBackgroundColor: WidgetStateColor.resolveWith((states) => Colors.red,),
+          dayStyle: Const.font_700_14(context),
+          dayShape: WidgetStateOutlinedBorder.resolveWith((states) => RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8)
+          ),),
+
+
+          weekdayStyle: Const.font_700_14(context),
+
+
+
+
+
+
+
+        ),
+
 
         cardTheme: CardThemeData(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(9)
-          ),
           color: Const.primeColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(9),
+
+          ),
+
           elevation: 0,
 
+        ),
+
+
+
+
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: Colors.white
         ),
 
         tabBarTheme: TabBarTheme(
@@ -61,10 +258,28 @@ class MyApp extends StatelessWidget {
           labelStyle: Const.poppins_600_14(context),
 
         ),
+        
+        
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          
+          
+
+          style: ButtonStyle(
+
+            side: WidgetStateBorderSide.resolveWith((states) => BorderSide(color: Const.yellow)),
+          shape: WidgetStateOutlinedBorder.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+            side: BorderSide(color: Const.yellow)
+          ),),
+            backgroundColor:WidgetStateColor.resolveWith((states) =>Colors.black) ,
+            foregroundColor: WidgetStateColor.resolveWith((states) => Const.yellow,),
+            textStyle: WidgetStateTextStyle.resolveWith((states) => Const.font_700_16(context,size: SC.from_width(13))!)
+          )
+          
+        ),
 
         listTileTheme: ListTileThemeData(
           // minTileHeight: SC.from_width(48),
-          titleTextStyle:Const.font_500_14(context)
+          titleTextStyle:Const.font_500_14(context),
 
         ),
         
@@ -73,10 +288,14 @@ class MyApp extends StatelessWidget {
         ),
 
         checkboxTheme: CheckboxThemeData(
-          checkColor:WidgetStateColor.resolveWith((states) => Colors.white,),
+
+          checkColor:WidgetStateColor.resolveWith((states) => Color.fromRGBO(114, 114, 114, 1),
+          ),
+          
+          fillColor: WidgetStateColor.resolveWith((states) => Colors.white,),
 
 
-          shape: RoundedRectangleBorder(),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
           side: BorderSide.none
         ),
 
@@ -86,7 +305,7 @@ class MyApp extends StatelessWidget {
           titleTextStyle: TextStyle(
             fontFamily: 'ProductSans',
             fontWeight: FontWeight.w900,
-            fontSize: SC.from_width(16),
+            fontSize: SC.from_width(18),
 
           ),
           elevation: 0,
@@ -95,6 +314,14 @@ class MyApp extends StatelessWidget {
         ),
         
         inputDecorationTheme: InputDecorationTheme(
+          fillColor: Const.primeColor,
+
+          errorStyle: TextStyle(
+              fontFamily: 'ProductSansa',
+              fontWeight: FontWeight.w400,
+              color: Colors.red,
+              fontSize: SC.from_width(10)
+          ),
 
           hintStyle: TextStyle(
             fontFamily: 'ProductSansa',
@@ -125,10 +352,19 @@ class MyApp extends StatelessWidget {
               )
           ),
 
+          focusedErrorBorder:OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                  color: Colors.red
+              )
+          ) ,
+
+
+
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                color: Colors.red,
+                color: Colors.red
               )
           ),
 
@@ -140,6 +376,8 @@ class MyApp extends StatelessWidget {
 
 
 
+
+
         
         
         
@@ -147,8 +385,10 @@ class MyApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             elevation: WidgetStateProperty.resolveWith((states) => 0,),
-            shape: WidgetStateOutlinedBorder.resolveWith((states) => LinearBorder.none,),
-            backgroundColor: WidgetStateColor.resolveWith((states) => Colors.transparent,),
+            shape: WidgetStateOutlinedBorder.resolveWith((states) => RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+            )),
+            backgroundColor: WidgetStateColor.resolveWith((states) => Const.yellow,),
             foregroundColor: WidgetStateColor.resolveWith((states) => Colors.white,),
             iconColor: WidgetStateColor.resolveWith((states) => Colors.white,),
             textStyle: WidgetStateTextStyle.resolveWith((states) => TextStyle(fontWeight: FontWeight.w700,fontSize: SC.from_width(15)),)
@@ -168,16 +408,88 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.black
         ),
 
-        colorScheme: ColorScheme.dark(primary: Const.primeColor),
 
 
         scaffoldBackgroundColor: Const.scaffoldColor,
 
 
       ),
-      home: OnBoardMain(),
+      // home: OnBoardMain(),
+      home: SplashScreen(action: action,),
+
     );
   }
+}
+
+
+
+@pragma("vm:entry-point")
+Future<void> _actionHande(ReceivedAction action) async
+{
+  // Logger().i("Action perform ${action.toMap()}");
+  // Logger().i("Action NEW ACTION PRINT ${action}");
+  //
+  //
+  //
+  // if(action.payload!=null)
+  //   {
+  //
+  //     var message = RemoteMessage.fromMap(jsonDecode(action.payload?['data']??''));
+  //
+  //     Logger().i("user = ${message.data['user']}  \n call id = ${message.data['callId']} \n threadId = ${message.data['threadId']}");
+  //
+  //     var u = User.fromJson(jsonDecode(message.data['user']));
+  //
+  //     if(message.notification?.android?.channelId=="VIDEO_CALL_CHANNEL")
+  //       {
+  //         Logger().e("4");
+  //
+  //         if(message.data['status'] == 'INCOMING')
+  //           {
+  //             Logger().e("5");
+  //             switch (action.buttonKeyPressed)
+  //                 {
+  //
+  //                   case "Vidio_call_accept":
+  //                     Logger().e("6");
+  //                 RoutTo(navigatorKey.currentContext!, child: (p0, p1) => VideoCallScreen(
+  //                   user: u,
+  //                   callId: message.data["callId"],
+  //                   channelId: message.data['threadId'],
+  //                 ),);
+  //                     Logger().e("7");
+  //                 break;
+  //
+  //               case 'Vidio_call_decline':
+  //                 break ;
+  //
+  //               default:
+  //                 Logger().e("6");
+  //                 RoutTo(navigatorKey.currentContext!, child: (p0, p1) => IncomingCallScreen(
+  //                   user: u,
+  //                   callId: message.data["callId"],
+  //                   channerlId: message.data['threadId'],
+  //                 ),);
+  //                 Logger().e("7");
+  //                 break;
+  //
+  //
+  //                 }
+  //           }
+  //
+  //       }
+  //
+  //     Logger().i("${message.notification?.android?.channelId}");
+  //     // User u = User.fromJson(_data['user']);
+  //   }
+  //
+  //
+  //
+  //
+  //
+
+
+
 }
 
 

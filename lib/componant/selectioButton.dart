@@ -11,16 +11,21 @@ class SelectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ink(
-      padding: EdgeInsets.symmetric(horizontal: SC.from_width(36),vertical: SC.from_width(8)),
+
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white),
         color: selected?Const.yellow:Colors.black,
         borderRadius: BorderRadius.circular(100)
       ),
       child: InkWell(
+        borderRadius: BorderRadius.circular(100),
         onTap: onTap,
-        child: Text(label,
-        style: Const.font_400_16(context),),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: SC.from_width(36),vertical: SC.from_width(8)),
+
+          child: Text(label,
+          style: Const.font_400_16(context),),
+        ),
       ),
     );
   }

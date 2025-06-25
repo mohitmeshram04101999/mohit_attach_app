@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 class MyactionButton extends StatefulWidget {
 
   bool activeOnInit;
+  Widget? loadingWidget;
   bool showLoader;
   Color? color;
   Color? foregroundColor;
@@ -32,7 +33,7 @@ class MyactionButton extends StatefulWidget {
   BoxDecoration? activeDecoration;
   TextStyle? lableStyle;
   MyactionButton({
-
+    this.loadingWidget,
     this.handelError,
     this.showLoader= true,
     this.lable,
@@ -130,6 +131,8 @@ class _MyactionButtonState extends State<MyactionButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTapFunction,
+
+
       child: AnimatedContainer(
         margin: widget.margin ?? EdgeInsets.zero,
         curve: widget.curve ?? Curves.easeInOut,
@@ -184,6 +187,7 @@ class _MyactionButtonState extends State<MyactionButton> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (loding)
+              widget.loadingWidget ??
               SizedBox(
                 height: SC.from_width(20),
                 width: SC.from_width(20),

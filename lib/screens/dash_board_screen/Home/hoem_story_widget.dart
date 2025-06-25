@@ -1,44 +1,124 @@
 import 'package:attach/const/app_constante.dart';
+import 'package:attach/modles/home_data_responce_model.dart';
+import 'package:attach/myfile/myast%20dart%20file.dart';
+import 'package:attach/myfile/routanimationConfigration.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/screens/storyView/view_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 
 class HomeStoryWidget extends StatelessWidget {
-  final Map? data;
-  const HomeStoryWidget({this.data,super.key});
+  final StoryModel? data;
+  final bool self;
+  const HomeStoryWidget({this.self = false,this.data,super.key});
 
   @override
   Widget build(BuildContext context) {
+
+
     return Column(
       children: [
-        Container(
-          padding: EdgeInsets.all(5),
-          height: SC.from_width(71),
-          width: SC.from_width(71),
-        
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              width: 2.5,
-              color: Const.yellow,
-            ),
+        SizedBox(
+          height: SC.from_width(73),
+          width: SC.from_width(73),
+          child: Stack(
+            children: [
+              SfRadialGauge(
+
+                enableLoadingAnimation: false,
+
+                axes: [
+                  RadialAxis(
+                    endAngle: 360,
+                    startAngle: 0,
+                    showTicks: false,
+                    maximum:360,
+                    minimum: 0,
+                    annotations: [
+                      GaugeAnnotation(
+                          widget: Container(
+                              clipBehavior: Clip.hardEdge,
+                              margin: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Const.scaffoldColor,
+                              ),
+                              child: Container(
+                                clipBehavior: Clip.hardEdge,
+                                margin: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.network(
+                                  data?.listener?.image??'',
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,),
+                              )))
+                    ],
+                    showLabels: false,
+
+
+                    backgroundImage: NetworkImage("https://leadkart.in-maa-1.linodeobjects.com/ATTACH_IMAGE/IMAGE/1749109955747_cb6391475579bde22aedc732f293cff604f2670a.png",),
+
+
+
+                    // ranges: [
+                    //   GaugeRange(
+                    //     startValue: 0,
+                    //     endValue: 99,
+                    //     color: Const.yellow,
+                    //     endWidth: 3,
+                    //     startWidth: 3,
+                    //   ),
+                    // ],
+
+                    ranges: List.generate(data?.stories?.length??0, (i) {
+
+                      var stoCount = data?.stories?.length??0;
+
+                      var gSize = 360/stoCount;
+
+                      var gap = data?.stories?.length==1?0:5;
+
+
+                      double start = (i.toDouble()*gSize)+gap;
+                      double end = start+gSize-gap;
+
+                        return GaugeRange(
+                          startValue: start,
+                          endValue: end,
+                          color: data?.stories?[i].seen==true?Const.grey_190_190_190:Const.yellow,
+                          endWidth: 3,
+                          startWidth: 3,
+                        );
+
+                        },),
+
+                  )
+                ],
+
+              ),
+              InkWell(
+                borderRadius: BorderRadius.circular(100),
+                onTap: ()
+                {
+                  RoutTo(context, child: (p0, p1) => StoryViewPage(data: {'':''},storyId: data?.listener?.id,));
+                },
+                child: Container(
+                  // color: Colors.red,
+                  height: double.infinity,
+                  width: double.infinity,
+
+                ),
+              )
+            ],
           ),
-        
-        
-          child: Container(
-            clipBehavior: Clip.hardEdge,
-        
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: Image.asset("${data?['Image']??''}",fit: BoxFit.cover,),
-          ),
-        
-        
-        
         ),
-        SizedBox(height: SC.from_width(5),),
-        Text("${data?['name']??''}",style: Const.font_500_14(context),)
+        SizedBox(height: SC.from_width(3),),
+        Text("${data?.listener?.name??''}${kDebugMode?'${data?.stories?.length}':''}",style: Const.font_500_12(context),)
       ],
     );
   }

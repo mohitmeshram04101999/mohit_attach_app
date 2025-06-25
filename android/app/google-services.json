@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "756580639101",
+    "firebase_url": "https://attach-cb446-default-rtdb.firebaseio.com",
+    "project_id": "attach-cb446",
+    "storage_bucket": "attach-cb446.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756580639101:android:770cabdbc3b412fa1a2c14",
+        "android_client_info": {
+          "package_name": "com.attach.app.attach"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCakcRXd-CjnllABMB2hNrCfNZWbKJmSa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756580639101:android:b2c7e8c864a8583f1a2c14",
+        "android_client_info": {
+          "package_name": "com.attachchat.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCakcRXd-CjnllABMB2hNrCfNZWbKJmSa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756580639101:android:d1872eec47d6ecd01a2c14",
+        "android_client_info": {
+          "package_name": "com.attachs.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCakcRXd-CjnllABMB2hNrCfNZWbKJmSa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

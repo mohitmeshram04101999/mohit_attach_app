@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class CustomActionButton extends StatelessWidget {
   final Function action;
   final String? lable;
+
   const CustomActionButton({this.lable,required this.action,super.key});
 
   @override
@@ -25,7 +26,7 @@ class CustomActionButton extends StatelessWidget {
       lableStyle: TextStyle(
         fontFamily: 'ProductSans',
         fontWeight: FontWeight.w500,
-        fontSize: SC.from_width(20),
+        fontSize: SC.from_width(18),
         color: Colors.black
       ),
       width: double.infinity,

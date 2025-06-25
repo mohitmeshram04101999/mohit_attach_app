@@ -30,8 +30,11 @@ class AuthField extends StatelessWidget {
           ),
 
         TextFormField(
+          controller: controller,
           keyboardType: keyTyp,
           validator: validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+
           style: TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w400,

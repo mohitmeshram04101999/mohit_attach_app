@@ -43,7 +43,8 @@ class ListerCard extends StatelessWidget {
                   {
                     onTap!();
                   }
-              },lable: 'Become a Listener',))
+              },lable: 'Become a Listener',)),
+          SizedBox(height: SC.from_width(1),)
 
         ],
       ),

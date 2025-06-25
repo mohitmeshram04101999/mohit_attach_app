@@ -8,6 +8,7 @@ class Const{
   static Color primeColor = Color.fromRGBO(39, 25, 49, 1);
   static Color scaffoldColor = Color.fromRGBO(16, 0, 27, 1);
   static Color yellow = Color.fromRGBO(221, 161, 94, 1);
+  static Color grey_190_190_190 = Color.fromRGBO(190 ,190, 190, 1);
 
 
   static  TextStyle?  font_900_34(context,{Color? color})
@@ -41,6 +42,17 @@ class Const{
     );
   }
 
+
+  static  TextStyle? font_900_28(context,{Color? color,double? size})
+  {
+    return TextStyle(
+        fontFamily: 'ProductSans',
+        color:  color,
+        fontWeight: FontWeight.w900,
+        fontSize: size??SC.from_width(28)
+    );
+  }
+
   static  TextStyle? font_400_12(context,{Color? color,double? size})
   {
     return TextStyle(
@@ -62,14 +74,25 @@ class Const{
   }
 
 
+  static  TextStyle? font_400_14(context,{Color? color,double? size})
+  {
+    return TextStyle(
+        fontFamily: 'ProductSans',
+        color:  color,
+        fontWeight: FontWeight.w400,
+        fontSize: size??SC.from_width(14)
+    );
+  }
 
-  static  TextStyle? font_500_24(context,{Color? color})
+
+
+  static  TextStyle? font_500_24(context,{Color? color,double? size})
   {
     return TextStyle(
         fontFamily: 'ProductSans',
         color:  color,
         fontWeight: FontWeight.w500,
-        fontSize: SC.from_width(24)
+        fontSize:size?? SC.from_width(24),
     );
   }
 
