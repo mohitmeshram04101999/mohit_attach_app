@@ -125,6 +125,10 @@ android {
 dependencies {
     implementation("com.google.android.play:core:1.10.3")
     implementation("com.google.android.play:core-ktx:1.8.1")
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.activity:activity:1.10.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     // Add other dependencies here
 }
 

@@ -195,6 +195,7 @@ class _OutgoingAudiolCallScreenState extends State<OutgoingAudiolCallScreen> {
                               callEndedById: DB.curruntUser?.id,
                             );
                             await p.leaveCall();
+                            p.updateOutGoingCallScreen(false);
                             Navigator.pop(context);
                             canTap = true;
                           }

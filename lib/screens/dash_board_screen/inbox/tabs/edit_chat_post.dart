@@ -32,6 +32,7 @@ class _EditChatPostDialogState extends State<EditChatPostDialog> {
       {
         videoController = VideoPlayerController.file(File(widget.filePath));
 
+        
         videoController?.initialize().then((d){
           setState(() {});
         });
@@ -55,10 +56,30 @@ class _EditChatPostDialogState extends State<EditChatPostDialog> {
               ]
               else if(widget.filePath.isVideoFileName) ...[
                 Expanded(
-                  child: AspectRatio(
-                    aspectRatio: videoController?.value.aspectRatio??1,
-                    child:(videoController?.value.isInitialized==true)? VideoPlayer(videoController!):Center(child: CircularProgressIndicator(),),
-                  ),
+                  
+                  
+                  // -----------------
+                  // child: AspectRatio(
+                  //   aspectRatio: videoController?.value.aspectRatio??1,
+                  //   child:(videoController?.value.isInitialized==true)? VideoPlayer(videoController!):Center(child: CircularProgressIndicator(),),
+                  // ),
+                  
+                  child: Center(child: Card(
+
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.videocam_rounded,size: SC.from_width(30),color: Colors.white,),
+                          SizedBox(width: SC.from_width(10),),
+                          Text(widget.filePath.split("/").last,style: Const.font_400_14(context,color: Colors.white),),
+                        ],
+
+                      ),
+                    ),
+                  )),
                 ),
               ]
               else ...[

@@ -7,6 +7,7 @@ import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/providers/auth_provider.dart';
 import 'package:attach/providers/my_hleper.dart';
 import 'package:attach/screens/on_bord_screen/login/otpScreen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,14 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
 
   var validationKey = GlobalKey<FormState>();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<AuthProvider>(context,listen: false).clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +95,18 @@ class _LogInScreenState extends State<LogInScreen> {
                       //
                       if(validationKey.currentState!.validate())
                         {
-                          await p.logIn(context);
+                          if(kDebugMode)
+                            {
+                              await p.logIn(context);
+                            }
+                          else
+                            {
+                              try {
+                                await p.logIn(context);
+                              } catch (e) {
+                                MyHelper.snakeBar(context,title: 'Error',message: 'Some thing went wrong');
+                              }
+                            }
                           // RoutTo(context, child: (p0, p1) => OtpScreen(),);
                         }
                     },lable: 'Send OTP',)

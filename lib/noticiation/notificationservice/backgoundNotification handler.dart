@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:attach/api/local_db.dart';
+import 'package:attach/bd/bg_main.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,16 +21,27 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   try {
      DB().saveSomeDate(message.data);
   } catch (e) {
+
     print('Error parsing JSON: $e');
+
+
   }
+
+
+
+
 
 
   // if(message.notification?.android?.channelId=='VIDEO_CALL_CHANNEL')
   //   {
+  //
+  //     final Map<String, dynamic> arguments =  {'data': message.data};
   //     if (Platform.isAndroid) {
-  //       const intent = AndroidIntent(
+  //       var intent = AndroidIntent(
   //         action: 'com.attachchat.app.ACTION_SHOW_CALL_SCREEN',
-  //         package: 'com.attachchat.app', // Replace with your package
+  //         package: 'com.attachchat.app',
+  //         arguments: arguments,
+  //         // Replace with your package
   //       );
   //
   //       await intent.launch();

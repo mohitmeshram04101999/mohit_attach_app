@@ -2,8 +2,11 @@
 import 'dart:convert';
 
 import 'package:attach/api/authAPi.dart';
+import 'package:attach/bd/bd_call_event_handler.dart';
+import 'package:attach/bd/bg_main.dart';
 import 'package:attach/modles/log_in_responce.dart';
 import 'package:attach/modles/otp_responce.dart';
+import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/providers/my_hleper.dart';
@@ -149,14 +152,27 @@ class AuthProvider with ChangeNotifier{
 
         if(logInResponce.profileComplete==true)
           {
-            Provider.of<ProfileProvider>(context,listen: false).setAndSaveUser(logInResponce.data!);
+             await Provider.of<ProfileProvider>(context,listen: false).setAndSaveUser(logInResponce.data!);
+             if(  await Provider.of<ProfileProvider>(context,listen: false).user?.online!=true)
+               {
+                 await Provider.of<ProfileProvider>(context,listen: false).goOnlineOrOffline(context);
+               }
+
+             if(await service.isRunning()!=true&&Provider.of<ProfileProvider>(context,listen: false).user?.userType==UserType.listener)
+               {
+
+               }
+             clear();
             ReplaceAll(context, child: (p0, p1) => DashBoardScreen(),);
-            clear();
           }
         else
           {
             ReplaceTo(context, child: (p0, p1) => CompleteProfileScreen(),);
           }
+
+
+
+
         break;
 
       case 400:

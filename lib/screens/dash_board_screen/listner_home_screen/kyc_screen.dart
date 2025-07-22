@@ -8,12 +8,14 @@ import 'package:attach/componant/custome_action_button.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/providers/my_hleper.dart';
+import 'package:attach/providers/profileProvider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 
 class KycScreen extends StatefulWidget {
@@ -132,7 +134,7 @@ class _KycScreenState extends State<KycScreen> {
         aadharBackImage: _adhartBack??'',
         aadharDOB: _dobController.text.trim(),
         aadharNumber: _adharNumberController.text.trim(),
-        aadharName: _adharNumberController.text.trim(),
+        aadharName: _nameController.text.trim(),
         onProgressFront: (d)async{
 
           await AwesomeNotifications().createNotification(
@@ -183,6 +185,8 @@ class _KycScreenState extends State<KycScreen> {
             message: "Detail Submitted",
             type: SnakeBarType.success,
           );
+
+          await Provider.of<ProfileProvider>(context,listen: false).getUser(context);
 
           Navigator.pop(context);
           break;
@@ -371,7 +375,7 @@ class _KycScreenState extends State<KycScreen> {
                             Image.asset("assets/icons/camera.png",width: SC.from_width(24),),
                             SizedBox(height: SC.from_width(4),),
                             //
-                            Text("Upload your front adhaar image",
+                            Text("Upload your back adhaar image",
                               textAlign: TextAlign.center,
                               style: Const.font_400_12(context),),
 

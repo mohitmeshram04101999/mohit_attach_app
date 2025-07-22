@@ -49,6 +49,7 @@ class _OutgoingVideoCallScreenState extends State<OutgoingVideoCallScreen> {
     super.dispose();
     var p =  Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false);
     p.updateOutGoingCallStatus(false);
+
   }
 
 
@@ -149,7 +150,9 @@ class _OutgoingVideoCallScreenState extends State<OutgoingVideoCallScreen> {
                               status: "REJECTED",
                               callEndedById: DB.curruntUser?.id,
                             );
+                            p.updateOutGoingCallStatus(false);
                             p.leaveCall();
+
                             Navigator.pop(context);
                             canTap = true;
                           }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:attach/componant/custome_shimmer.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/home_data_responce_model.dart';
@@ -8,14 +10,23 @@ import 'package:attach/providers/chatProvider.dart';
 import 'package:attach/providers/listner_profile_detail_provider.dart';
 import 'package:attach/providers/videoCallProvider.dart';
 import 'package:attach/screens/dash_board_screen/profile_screem/profile_body/profile_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class ListenerProfileDetailScreen extends StatefulWidget {
   final Map? data;
-  final HomeListener? listener;
-  const ListenerProfileDetailScreen({this.listener, this.data, super.key});
+  final String? heroTag;
+  final String id;
+  final bool cameFromChat;
+  const ListenerProfileDetailScreen({
+
+    this.data,
+    this.heroTag,
+    required this.id,
+    this.cameFromChat = false,
+    super.key});
 
   @override
   State<ListenerProfileDetailScreen> createState() =>
@@ -28,32 +39,55 @@ class _ListenerProfileDetailScreenState
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("gettin detail for usere ${widget.id}");
     Provider.of<ListenerProfileDetailProvider>(
       context,
       listen: false,
-    ).getDetail(context, widget.listener?.id ?? '');
+    ).getDetail(context, widget.id ?? '');
   }
+
+
+
+  bool _canTap = true;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ListenerProfileDetailProvider>(
       builder:
           (context, p, child) => WillPopScope(
+
             onWillPop: () async {
               p.clear();
               return true;
             },
+
             child: Scaffold(
               appBar: AppBar(
                 actions: [
                   //
                   if (p.detail?.setAvailability?.videoCall ?? false)
                     IconButton(
-                      onPressed: () {
-                        Provider.of<VideoCallProvider>(
-                          context,
-                          listen: false,
-                        ).createThread(context, p.detail!);
+                      onPressed: () async{
+                if(_canTap){
+                  _canTap = false;
+                  if (kDebugMode) {
+                    setState(() {
+
+                    });
+                  }
+                  await Provider.of<VideoCallProvider>(
+                    context,
+                    listen: false,
+                  ).createThread(context, p.detail!);
+
+                  _canTap = true;
+                  if (kDebugMode) {
+                    setState(() {
+
+                    });
+                  }
+
+                }
                       },
                       icon: Image.asset(
                         "assets/icons/inboxpageicons/vid.png",
@@ -65,11 +99,26 @@ class _ListenerProfileDetailScreenState
                   ///
                   if (p.detail?.setAvailability?.audioCall ?? false)
                     IconButton(
-                      onPressed: () {
-                        Provider.of<AudioCallProvider>(
-                          context,
-                          listen: false,
-                        ).createThread(context, p.detail!);
+                      onPressed: () async{
+                        if(_canTap){
+                          _canTap = false;
+                          if (kDebugMode) {
+                            setState(() {
+
+                            });
+                          }
+                          await Provider.of<AudioCallProvider>(
+                            context,
+                            listen: false,
+                          ).createThread(context, p.detail!);
+                          _canTap = true;
+
+                          if (kDebugMode) {
+                            setState(() {
+
+                            });
+                          }
+                        }
                       },
                       icon: Image.asset(
                         "assets/icons/inboxpageicons/aud.png",
@@ -77,6 +126,10 @@ class _ListenerProfileDetailScreenState
                       ),
                     ),
                   SizedBox(width: SC.from_width(5)),
+
+                  if(kDebugMode)
+                    Text(_canTap.toString()),
+
                   // IconButton(onPressed: (){}, icon: Icon(Icons.more_vert,size: SC.from_width(30),)) ,
                 ],
               ),
@@ -84,7 +137,11 @@ class _ListenerProfileDetailScreenState
               body: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 14),
                 children: [
-                  ProfileView(data: widget.data, listener: widget.listener),
+
+
+                  CustomShimmer(
+                   loading:  p.loading,
+                      child: ProfileView(data: widget.data, listener:p.detail,heroTag: widget.heroTag??'',)),
 
                   SizedBox(height: SC.from_width(17)),
 
@@ -167,14 +224,35 @@ class _ListenerProfileDetailScreenState
 
                                 Expanded(
                                   child: GestureDetector(
-                                    onTap: () {
-                                      Provider.of<ChatProvider>(
-                                        context,
-                                        listen: false,
-                                      ).createThread(
-                                        context,
-                                        p.detail?.id ?? '',
-                                      );
+                                    onTap: () async{
+                                      if(_canTap){
+                                        _canTap = false;
+                                        if (kDebugMode) {
+                                          setState(() {
+
+                                          });
+                                        }
+                                        if(widget.cameFromChat)
+                                          {
+                                            Navigator.pop(context);
+                                          }
+                                        else
+                                          {
+                                            await  Provider.of<ChatProvider>(
+                                              context,
+                                              listen: false,
+                                            ).createThread(
+                                              context,
+                                              p.detail?.id ?? '',
+                                            );
+                                          }
+                                        _canTap = true;
+                                        if (kDebugMode) {
+                                          setState(() {
+
+                                          });
+                                        }
+                                      }
                                     },
                                     child: Container(
                                       height: SC.from_width(45),
@@ -270,7 +348,7 @@ class _ListenerProfileDetailScreenState
                               ],
                             ),
                           ),
-                          SizedBox(height: SC.from_width(15)),
+                          SizedBox(height: SC.from_width(5 )),
 
                           Align(
                             alignment: Alignment.centerLeft,
@@ -304,91 +382,42 @@ class _ListenerProfileDetailScreenState
                                     ),
                                   ),
                                 ),
+
+
                               ],
                             ),
                           ),
 
-                          SizedBox(height: SC.from_width(11)),
+                          SizedBox(height: SC.from_width(5 )),
 
-                          // SizedBox(
-                          //   height: SC.from_width(45),
-                          //
-                          //   child: Row(
-                          //     children: [
-                          //       Expanded(
-                          //         child: SizedBox(
-                          //           height: double.infinity,
-                          //           width: double.infinity,
-                          //           child: Card(
-                          //             margin: EdgeInsets.zero,
-                          //             child: Padding(
-                          //               padding: EdgeInsets.symmetric(
-                          //                 vertical: SC.from_width(0),
-                          //               ),
-                          //               child: Row(
-                          //                 mainAxisAlignment:
-                          //                     MainAxisAlignment.center,
-                          //                 children: [
-                          //                   Flexible(
-                          //                     child: Text(
-                          //                       p.detail?.languages?.isEmpty ==
-                          //                               true
-                          //                           ? ""
-                          //                           : p
-                          //                                   .detail
-                          //                                   ?.languages?[0]
-                          //                                   .name ??
-                          //                               '',
-                          //                       style: Const.font_700_14(
-                          //                         context,
-                          //                       ),
-                          //                       maxLines: 1,
-                          //                     ),
-                          //                   ),
-                          //                   SizedBox(width: SC.from_width(10)),
-                          //                   Image.asset(
-                          //                     "assets/icons/land.png",
-                          //                     width: SC.from_width(25),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: SC.from_width(10)),
-                          //
-                          //       Expanded(
-                          //         child: SizedBox(
-                          //           height: double.infinity,
-                          //           child: Card(
-                          //             margin: EdgeInsets.zero,
-                          //             child: Padding(
-                          //               padding: EdgeInsets.symmetric(
-                          //                 vertical: SC.from_width(0),
-                          //               ),
-                          //               child: Row(
-                          //                 mainAxisAlignment:
-                          //                     MainAxisAlignment.center,
-                          //                 children: [
-                          //                   Text(
-                          //                     "${(p.detail?.gender ?? '').capitalizeFirst} ${p.detail?.age ?? '0'} Yr",
-                          //                     style: Const.font_700_14(context),
-                          //                   ),
-                          //                   SizedBox(width: SC.from_width(10)),
-                          //                   Image.asset(
-                          //                     "assets/icons/gender.png",
-                          //                     width: SC.from_width(25),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
+                          Row(
+                            children: [
+                              Image.asset(
+                                "assets/icons/experence_icon.png",
+                                width: SC.from_width(18),
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: SC.from_width(5)),
+                              Flexible(
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: Const.font_700_14(
+                                      context,
+                                    ), // Default style
+                                    children: [
+                                      TextSpan(text: 'Experience : '),
+                                      TextSpan(
+                                        text:
+                                            '${(p.detail?.experience ?? '').capitalizeFirst} ',
+                                        style: Const.font_400_14(context),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
                         ],
                       ),
                     ),

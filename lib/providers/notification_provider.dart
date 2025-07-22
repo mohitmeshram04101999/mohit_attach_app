@@ -37,7 +37,15 @@ class NotificationProvider with ChangeNotifier {
       case 200:
         var data = jsonDecode(resp.body);
         NotificationResponce notificationResponce = NotificationResponce.fromJson(data);
-        _notifications.addAll(notificationResponce.data??[]);
+        if(_page==1)
+        {
+          _notifications.clear();
+          _notifications.addAll(notificationResponce.data!);
+        }
+        else
+        {
+          _notifications.addAll(notificationResponce.data!);
+        }
         break;
 
 

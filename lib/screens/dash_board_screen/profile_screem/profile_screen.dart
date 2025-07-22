@@ -75,7 +75,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: 'assets/icons/profile_section_icons/image 9.png',
                 title: "Edit Profile",
                 subTitle: "Update your personal details.",
-              onTap: ()=>RoutTo(context, child: (p0, p1) => EditProfile(),),
+              onTap: ()async{
+
+                await  RoutTo(context, child: (p0, p1) => EditProfile(),);
+
+                ProfileProvider p = Provider.of<ProfileProvider>(context,listen: false);
+                p.clearEdit(context);
+              },
             ),
 
 
@@ -157,8 +163,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             //Lister Tile,
             Consumer<ProfileProvider>(builder: (context, p, child) {
+
+
+
+              // return Text(p.user!.toJson().toString());
+
               if(p.user?.userType==UserType.user)
                 {
+
+                  if(p.user?.status=='PENDING')
+                    {
+                      return ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        minTileHeight: SC.from_width(48),
+                        title: Text("Profile Is In Review For Listener"),
+                        subtitle: Text("Waiting for approval." ),
+                        leading: Icon(Icons.info_rounded,),
+                        tileColor: Const.yellow.withOpacity(1),
+                      );
+                    }
+
+                  if(p.user?.status=='REJECTED')
+                    {
+                      return ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        minTileHeight: SC.from_width(48),
+                        title: Text("Profile Is Rejected For Listener"),
+                        subtitle: Text("Please try again." ),
+                        leading: Icon(Icons.info_rounded,),
+                        onTap: (){
+                          RoutTo(context, child:(p0, p1) => BecomeListenerMain(),);
+                        },
+                        tileColor: Colors.red,
+                      );
+                    }
+
+                  if(p.user?.status=='APPROVED')
+                    {
+                      return ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        minTileHeight: SC.from_width(48),
+                        title: Text("Profile Is Approved For Listener"),
+                        subtitle: Text("You are now a listener." ),
+                        leading: Icon(Icons.info_rounded,),
+                        tileColor: Colors.green,
+                      );
+                    }
+
+
                   return ListerCard(
                     onTap: () async{
 

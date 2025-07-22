@@ -17,8 +17,10 @@ class CustomTextField extends StatefulWidget {
   final bool filled;
   final TextInputType? keyTyp;
   final void Function()? onTap;
+  final void Function(String)? onChange;
   final bool readOnly;
-  const CustomTextField({this.labelSide,this.readOnly= false,this.onTap,this.filled=false,this.expand = false,this.maxLine=1,this.keyTyp,this.controller,this.validator,this.formatters,this.hintText,this.leading,this.label,super.key});
+  final String? initialValue;
+  const CustomTextField({ this.initialValue,this.onChange,this.labelSide,this.readOnly= false,this.onTap,this.filled=false,this.expand = false,this.maxLine=1,this.keyTyp,this.controller,this.validator,this.formatters,this.hintText,this.leading,this.label,super.key});
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -75,9 +77,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
           controller: widget.controller,
           // expands: true,
           cursorColor: Colors.white,
+          initialValue:  widget.initialValue,
           maxLines: widget.maxLine,
 
           onChanged: (d){
+            if(widget.onChange!=null)
+              {
+                widget.onChange!(d);
+              }
             if(widget.validator!=null)
               {
                 vMessage = widget.validator!(d);

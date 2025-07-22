@@ -20,7 +20,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<NotificationProvider>(context,listen: false).getNotification(context);
+    Provider.of<NotificationProvider>(context,listen: false).refreshNotification(context);
   }
 
   @override

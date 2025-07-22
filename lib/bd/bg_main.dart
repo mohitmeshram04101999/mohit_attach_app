@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:attach/api/local_db.dart';
+import 'package:attach/bd/bd_call_event_handler.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/noticiation/notificationservice/call_kit_action_handler.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -14,8 +16,23 @@ import 'package:socket_io_client/socket_io_client.dart' as Io;
 final service = FlutterBackgroundService();
 
 
+bool bgServiceIsRunning  = false;
+
+
+
 
 Future<void> initBgService() async {
+
+
+
+
+  if(bgServiceIsRunning){
+    print("bg service is already running");
+    return;
+  }
+
+  Logger().i("Init bg service is Called");
+
 
 
 
@@ -43,7 +60,11 @@ Future<void> initBgService() async {
   );
 
   service.configure(
-    iosConfiguration: IosConfiguration(),
+    iosConfiguration: IosConfiguration(
+      autoStart: true,
+      onForeground: _onStart,
+    ),
+
     androidConfiguration: AndroidConfiguration(
       onStart: _onStart,
       autoStartOnBoot: true,
@@ -55,53 +76,139 @@ Future<void> initBgService() async {
       foregroundServiceNotificationId: 77470,
 
     ),
+
   );
+
+
+  service.startService();
+
 }
 
+
+//
+// @pragma('vm:entry-point')
+// void _onStart(ServiceInstance service) async{
+//   WidgetsFlutterBinding.ensureInitialized();
+//   DartPluginRegistrant.ensureInitialized();
+//
+//
+//
+//
+//
+//
+//
+//
+//   await Firebase.initializeApp();
+//
+//
+//
+//   // Create initial notification
+//   AwesomeNotifications().createNotification(
+//
+//     content: NotificationContent(
+//       id: 77470,
+//       channelKey: 'basic_channel',
+//       title: '',
+//       body: '',
+//       autoDismissible: false,
+//
+//     ),
+//   );
+//
+//
+//   service.invoke("soem thiin happend",{'asd':'asdfadsadsf'});
+//
+//   print("soem thiin happend ${navigatorKey.currentState==null}");
+//
+//
+//
+//   initCallKitListener(service);
+//
+//
+//
+//
+//
+//   // Connect the socket globally
+//
+// }
+
+
+
+
 @pragma('vm:entry-point')
-void _onStart(ServiceInstance service) async{
-  await WidgetsFlutterBinding.ensureInitialized();
+void _onStart(ServiceInstance service) async {
+
+
+  WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
 
 
+  bgServiceIsRunning = true;
+  Logger().e("BackGround SService has been Started");
+
+  if (service is AndroidServiceInstance) {
+
+
+    service.setForegroundNotificationInfo(
+      title: "Attach Is Running",
+      content: "Online",
+    );
+  }
+
   await Firebase.initializeApp();
-
-  // Create initial notification
-  AwesomeNotifications().createNotification(
-
-    content: NotificationContent(
-      id: 77470,
-      channelKey: 'basic_channel',
-      title: '',
-      body: '',
-      autoDismissible: false,
-
-    ),
-  );
-
-
-  service.invoke("soem thiin happend",{'asd':'asdfadsadsf'});
-
-  print("soem thiin happend ${navigatorKey.currentState==null}");
-
-
 
   initCallKitListener(service);
 
 
 
 
+  Timer.periodic(Duration(seconds: 15), (timer) async {
+    if (service is AndroidServiceInstance) {
+ 
+      service.setForegroundNotificationInfo(
+        title: "Attach Is Running",
+        content: "Online",
+      );
+    }
 
-  // Connect the socket globally
 
+    service.invoke('update', {
+      'timestamp': DateTime.now().toString(),
+    });
+
+
+    // service.on("stop").listen((d){
+    //
+    //   service.invoke("stopCallListener");
+    //   service.stopSelf();
+    //   Logger().e("BackGround SService has been Storp");
+    //   bgServiceIsRunning = false;
+    // });
+
+    service.on("stop").listen((d) {
+      service.invoke("stopCallListener");// stop listeners
+      service.stopSelf();
+      bgServiceIsRunning = false;
+      Logger().e("Background Service stopped");
+    });
+
+
+
+
+
+
+  });
 }
 
 
 
 
-void initCallKitListener(ServiceInstance service) {
+void initCallKitListener(ServiceInstance serviceInstance) {
+  Logger().i("initCallKitListener called");
   FlutterCallkitIncoming.onEvent.listen((event) {
-    callKitActionhanlde(event,service: service);  }
+    callKitActionhanlde(event,serviceInstance: serviceInstance);  }
   );
+
 }
+
 

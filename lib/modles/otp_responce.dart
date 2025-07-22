@@ -77,6 +77,7 @@ class User {
   String? becomeAListenerForm;
   int? sessionChargeChat;
   String? status;  // ["PENDING", "REJECTED", "APPROVED"]
+  String? kycStatus;  // ["PENDING", "REJECTED", "APPROVED"]
 
   User({
     this.age,
@@ -115,6 +116,7 @@ class User {
     this.becomeAListenerForm,
     this.sessionChargeChat,
     this.status,
+    this.kycStatus,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -154,6 +156,7 @@ class User {
     becomeAListenerForm: json['becomeAListenerForm'],
     sessionChargeChat: json['sessionChargeChat'],
     status: json['status'],
+    kycStatus: json['kycStatus'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -192,7 +195,8 @@ class User {
     'isBellOn':isBellOn,
     'becomeAListenerForm':becomeAListenerForm,
     'sessionChargeChat':sessionChargeChat,
-    'status':status
+    'status':status,
+    "kycStatus":kycStatus
   };
 }
 

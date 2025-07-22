@@ -9,6 +9,7 @@ import 'package:attach/modles/chat_contect_model.dart';
 import 'package:attach/modles/otp_responce.dart';
 import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/animated%20dilog.dart';
+import 'package:attach/myfile/myast%20dart%20file.dart';
 
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/other/date_time_manager.dart';
@@ -17,11 +18,13 @@ import 'package:attach/providers/audio%20call%20provider.dart';
 import 'package:attach/providers/chatProvider.dart';
 import 'package:attach/providers/chat_screen_message_field.dart';
 import 'package:attach/providers/videoCallProvider.dart';
+import 'package:attach/screens/home_sub_screen/listner_profile_detail_screen.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatContact? contact;
@@ -36,7 +39,29 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
   }
+
+
+
+  // onScreenShot() async
+  // {
+  //   var result =  await noScreenshot.screenshotOn();
+  //   print("Screen Shot is of $result");
+  // }
+
+
+  final  noScreenshot = NoScreenshot.instance;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    // onScreenShot();
+  }
+
+
 
 
   @override
@@ -89,7 +114,12 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
 
               title: InkWell(
-                onTap: () {},
+                onTap: () {
+                 if(p.user?.id!=null)
+                   {
+                     RoutTo(context, child: (p0, p1) => ListenerProfileDetailScreen(id: p.user!.id!,cameFromChat: true,),);
+                   }
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Row(
@@ -199,6 +229,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           // Text("${p.user?.toJson()}"),
                         ],
                       ),
+
                     Expanded(
                       child:
                           (p.loading)
@@ -246,7 +277,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: InkWell(
                       borderRadius:BorderRadius.all( Radius.circular(100)) ,
                       onTap: (){
-
                         p.endSession(context);
 
                     }, child: Padding(
@@ -277,18 +307,17 @@ class _SafeConversationCard extends StatelessWidget {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.all(0),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding:  EdgeInsets.all(SC.from_width(16)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Title Row
-            const Row(
+             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.shield, color: Colors.green, size: 24),
-                SizedBox(width: 8),
+                SizedBox(width: SC.from_width(8)),
                 Text(
                   '100% Safe & Private Conversation',
                   style: TextStyle(
@@ -299,7 +328,7 @@ class _SafeConversationCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: SC.from_width(12)),
             // Info Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

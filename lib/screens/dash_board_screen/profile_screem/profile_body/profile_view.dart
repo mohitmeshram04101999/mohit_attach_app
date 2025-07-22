@@ -2,6 +2,7 @@ import 'package:attach/componant/custom_star_ratting.dart';
 import 'package:attach/componant/profile_aVTAR.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/home_data_responce_model.dart';
+import 'package:attach/modles/otp_responce.dart';
 import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
@@ -15,8 +16,9 @@ import 'package:provider/provider.dart';
 
 class ProfileView extends StatelessWidget {
   final Map? data;
-  final HomeListener? listener;
-  const ProfileView({this.listener,this.data,super.key});
+  final User? listener;
+  final String heroTag;
+  const ProfileView({this.heroTag='',this.listener,this.data,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +27,8 @@ class ProfileView extends StatelessWidget {
       children: [
 
       Hero(
-        tag: '${listener?.id}${listener?.image??''}',
-          child: ProfileAvtar(image: '${listener?.image??''}',imageType: ImageType.network,
+        tag: heroTag,
+          child: ProfileAvtar(image: listener?.image??'',imageType: ImageType.network,
           gender: listener?.gender,)
       ),
       SizedBox(width: SC.from_width(18),),
@@ -153,7 +155,6 @@ class SelfProfileView extends StatelessWidget {
 
 
                 if(p.user?.userType==UserType.listener)...[
-
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -184,7 +185,7 @@ class SelfProfileView extends StatelessWidget {
                 ],
 
                 if(kDebugMode)
-                  SelectableText("${p.user}",style: Const.font_400_12(context,size: SC.from_width(14)),),
+                  SelectableText(p.user?.id??'',style: Const.font_400_12(context,size: SC.from_width(14)),),
 
 
               ],

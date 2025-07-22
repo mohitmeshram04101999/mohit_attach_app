@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:attach/api/authAPi.dart';
 import 'package:attach/api/listners_Api.dart';
 import 'package:attach/api/local_db.dart';
+import 'package:attach/bd/bd_call_event_handler.dart';
 import 'package:attach/bd/bg_main.dart';
 import 'package:attach/componant/logOutDialog.dart';
 import 'package:attach/modles/otp_responce.dart';
+import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/animated%20dilog.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/providers/auth_provider.dart';
@@ -13,6 +15,7 @@ import 'package:attach/providers/home_provider.dart';
 import 'package:attach/providers/language_provider.dart';
 import 'package:attach/providers/my_hleper.dart';
 import 'package:attach/providers/story_provider.dart';
+import 'package:attach/providers/transection_history_provider.dart';
 import 'package:attach/screens/dash_board_screen/dash_board_screen.dart';
 import 'package:attach/screens/on_bord_screen/login/log_in_screen.dart';
 import 'package:attach/screens/on_bord_screen/on_board_main.dart';
@@ -68,7 +71,6 @@ class ProfileProvider with ChangeNotifier {
     _user?.languages?.forEach((element) {
       debugPrint("setting language ${element.toJson()}");
       p.selectLanguage(element);
-
     });
 
     debugPrint("data is set fro language ${p.selectedLanguage}");
@@ -76,13 +78,34 @@ class ProfileProvider with ChangeNotifier {
   }
 
   goOnlineOrOffline(BuildContext context) async {
+
+
     debugPrint("adfd");
+
+    OpenDailogWithAnimation(context,
+        barriarDissmesible: false,
+        animation: dailogAnimation.scale,
+        dailog:(animation, secondryAnimation) => Center(child: CircularProgressIndicator(),));
+
+    print("Dialod is Opne");
+
+
+
+
     var resp = await AuthApi().goOnlineOfOffline();
 
     switch (resp.statusCode) {
       case 200:
         var d = jsonDecode(resp.body);
         _user = User.fromJson(d['data']);
+        if(_user?.online==true&&user?.userType==UserType.listener)
+          {
+            await initBgService();
+          }
+        else
+          {
+            service.invoke("stop");
+          }
         break;
       case 400:
         MyHelper.snakeBar(
@@ -112,6 +135,7 @@ class ProfileProvider with ChangeNotifier {
         );
         break;
     }
+    Navigator.pop(context);
     notifyListeners();
   }
 
@@ -221,6 +245,9 @@ class ProfileProvider with ChangeNotifier {
         await saveUser();
         auth.clear();
         languageProvider.clear();
+        _name.clear();
+        _mail.clear();
+        _gender = null;
         ReplaceAll(context, child: (p0, p1) => DashBoardScreen());
         break;
       case 400:
@@ -253,31 +280,6 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<void> _stopBackgroundService() async {
-    try {
-      final service = FlutterBackgroundService();
-      bool isRunning = await service.isRunning();
-
-      if (isRunning) {
-        // Send message to service to stop itself
-        service.invoke("stopService");
-
-        // Wait a moment for the service to stop
-        await Future.delayed(const Duration(milliseconds: 500));
-
-        // Verify service has stopped
-        isRunning = await service.isRunning();
-        if (isRunning) {
-          debugPrint("Background service failed to stop");
-        } else {
-          debugPrint("Background service stopped successfully");
-        }
-      }
-    } catch (e) {
-      debugPrint("Error stopping background service: $e");
-    }
-  }
-
   logOut(BuildContext context) async {
     var p = await OpenDailogWithAnimation(
       context,
@@ -296,8 +298,11 @@ class ProfileProvider with ChangeNotifier {
 
         switch (resp.statusCode) {
           case 200:
-            // Stop background service first
-            await _stopBackgroundService();
+
+
+
+
+            service.invoke('stop');
 
             // Then clear data and navigate
             await DB().clear();
@@ -306,6 +311,10 @@ class ProfileProvider with ChangeNotifier {
               listen: false,
             ).disconnectSocket(context);
             Provider.of<StoryProvider>(context, listen: false).clear();
+            Provider.of<TransectionHistoryProvider>(
+              context,
+              listen: false,
+            ).clear();
             ReplaceAll(context, child: (p0, p1) => const LogInScreen());
 
             MyHelper.snakeBar(
@@ -352,54 +361,6 @@ class ProfileProvider with ChangeNotifier {
           type: SnakeBarType.error,
         );
       }
-    }
-  }
-
-  becomeListener(BuildContext context) async {
-    var resp = await ListenerApi().becomeListener();
-
-    switch (resp.statusCode) {
-      case 200:
-        var d = jsonDecode(resp.body);
-
-        _user = User.fromJson(d['data']);
-        MyHelper.snakeBar(
-          context,
-          title: 'You are now a listener',
-          message: "Welcome  as a listener ${_user?.name ?? ''}",
-          type: SnakeBarType.success,
-        );
-
-        await saveUser();
-        ReplaceAll(context, child: (p0, p1) => DashBoardScreen());
-        break;
-      case 400:
-        MyHelper.snakeBar(
-          context,
-          title: "Bad Request",
-          message: '${jsonDecode(resp.body)['message']}',
-        );
-        break;
-      case 403:
-        MyHelper.snakeBar(
-          context,
-          title: "Restrict Request",
-          message: '${jsonDecode(resp.body)['message']}',
-        );
-        break;
-      case 401:
-        MyHelper.tokenExp(context);
-        break;
-      case 500:
-        MyHelper.serverError(context, resp.body);
-        break;
-      default:
-        MyHelper.serverError(
-          context,
-          '${resp.statusCode}\n${resp.body}',
-          title: 'Exception',
-        );
-        break;
     }
   }
 
@@ -458,15 +419,11 @@ class ProfileProvider with ChangeNotifier {
       ReplaceTo(context, child: (p0, p1) => const OnBoardMain());
       return;
     }
-
     await getUser(context);
     if (_user == null) {
       ReplaceTo(context, child: (p0, p1) => const LogInScreen());
     } else {
       ReplaceTo(context, child: (p0, p1) => DashBoardScreen(action: action));
-      if (_user?.online == false) {
-        await goOnlineOrOffline(context);
-      }
     }
   }
 
@@ -482,6 +439,15 @@ class ProfileProvider with ChangeNotifier {
   }
 
   updateProfile(BuildContext context) async {
+    if (_name.text.trim().isEmpty) {
+      MyHelper.snakeBar(
+        context,
+        title: "Name Is Required",
+        message: "Provide Name",
+        type: SnakeBarType.error,
+      );
+      return;
+    }
     var lang = Provider.of<LanguageProvider>(context, listen: false);
 
     var resp = await AuthApi().updateUser(
@@ -495,15 +461,14 @@ class ProfileProvider with ChangeNotifier {
       gender: _gender,
       profileImage: _selectedProfileImage,
     );
-    
+
     print('this is responcse from update api ${resp.statusCode}');
 
     switch (resp.statusCode) {
       case 200:
-
-        String t = DB.curruntUser?.token??'';
+        String t = DB.curruntUser?.token ?? '';
         await _getProfileDetail(context, _user?.id ?? '');
-        Map<String, dynamic> userMap = _user?.toJson()??{};
+        Map<String, dynamic> userMap = _user?.toJson() ?? {};
         userMap['token'] = t;
         _user = User.fromJson(userMap);
         await saveUser();
@@ -511,7 +476,7 @@ class ProfileProvider with ChangeNotifier {
         Navigator.of(context).pop();
         clearEdit(context);
         break;
-        
+
       case 400:
         MyHelper.snakeBar(
           context,

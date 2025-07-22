@@ -24,6 +24,10 @@ class PathApi
   static String sendContactRequest = '/createMessage';
   static String endSession = '/sessionEnd';
   static String createRating = '/createRating';
+  static String getListerNerQuestion = 'getAllQuestions';
+  static String acquire = '/agora/acquire';
+  static String startRecord = '/agora/start';
+  static String stopRecord = '/agora/stop';
 
 
 

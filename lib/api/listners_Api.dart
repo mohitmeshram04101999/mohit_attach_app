@@ -51,7 +51,7 @@ class ListenerApi
   }
 
 
-  Future<http.Response>becomeListener() async
+  Future<http.Response>becomeListener(List form) async
   {
     var uri = PathApi.baseUri+PathApi.becomeListener;
 
@@ -59,6 +59,7 @@ class ListenerApi
 
     var d = {
       "userId":DB.curruntUser?.id??'',
+      'form':form
     };
 
 

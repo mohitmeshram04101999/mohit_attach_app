@@ -16,7 +16,7 @@ class ResendOtpWidget extends StatefulWidget {
 
 class _ResendOtpWidgetState extends State<ResendOtpWidget> {
 
-  int timer = 180;
+  int timer = 30;
 
 
   Timer? _timer;

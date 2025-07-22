@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:attach/api/apiPath.dart';
 import 'package:attach/api/callsApi.dart';
 import 'package:attach/api/listners_Api.dart';
 import 'package:attach/api/local_db.dart';
+import 'package:attach/api/record_api.dart';
 import 'package:attach/callScreens/outGoingVideoCallScreen.dart';
 import 'package:attach/dialog/video%20call%20mini%20Window.dart';
 import 'package:attach/modles/otp_responce.dart';
@@ -59,6 +61,10 @@ class VideoCallProvider with ChangeNotifier {
   bool _listnersSet = false;
   bool _isMicMuted = false;
   bool _isSpeakerOn = true;
+  String? _resourceId;
+  String? _recordingId;
+
+
 
   PermissionStatus? _microphon;
   PermissionStatus? _camera;
@@ -68,6 +74,8 @@ class VideoCallProvider with ChangeNotifier {
   bool get isOnCallScreen => _isOnCallScreen;
   bool get isMicMuted =>_isMicMuted;
   bool get isSpeakerOn =>_isSpeakerOn;
+  String? get resourceId => _resourceId;
+  String? get recordingId => _recordingId;
 
 
 
@@ -229,13 +237,21 @@ class VideoCallProvider with ChangeNotifier {
   {
     print("User join ");
     _remoteUid =remotId;
+    // _startRecord(navigatorKey.currentContext!);
     notifyListeners();
   }
 
   void _onUserOffline(RtcConnection connection, int remoteUid,
       UserOfflineReasonType reason) {
+    // _stopRecord(navigatorKey.currentContext!);
     if(_isOnCallScreen)
       {
+        _isOnCallScreen = false;
+        Navigator.pop(navigatorKey.currentContext!);
+      }
+    if(_onOutGoingCallScreen)
+      {
+        _onOutGoingCallScreen = false;
         Navigator.pop(navigatorKey.currentContext!);
       }
     debugPrint("remote user $remoteUid left channel");
@@ -264,7 +280,6 @@ class VideoCallProvider with ChangeNotifier {
 
     Logger().i("thisi is permmisossion statuse ${_camera} ${_microphon}");
 
-
     if(_init ==false)
       {
 
@@ -280,6 +295,7 @@ class VideoCallProvider with ChangeNotifier {
 
   Future<void> leaveCall({bool update = false}) async {
     try {
+
       await _engine?.leaveChannel();
       await _engine?.stopPreview();
       _localUserJoined = false;
@@ -305,6 +321,8 @@ class VideoCallProvider with ChangeNotifier {
       _init  = false;
 
 
+
+
     } catch (e) {
       debugPrint("Error leaving the call: $e");
     }
@@ -321,8 +339,7 @@ class VideoCallProvider with ChangeNotifier {
           status: "MISSED",
         callEndedById: _user?.id
       );
-
-
+      destroyEngine();
     });
   }
 
@@ -331,6 +348,7 @@ class VideoCallProvider with ChangeNotifier {
   {
     _callTimeOut?.cancel();
     _callTimeOut =null;
+
   }
 
 
@@ -398,7 +416,6 @@ class VideoCallProvider with ChangeNotifier {
 
       case 201:
         var d = jsonDecode(resp.body);
-
         RoutTo(context, child: (p0, p1) => OutgoingVideoCallScreen(callId: d['data']['_id'],threadId: threadId,user:user,));
         break;
 
@@ -446,6 +463,148 @@ class VideoCallProvider with ChangeNotifier {
   {
     _overlayEntry?.remove();
   }
+
+
+
+  destroyEngine({bool? release = false}) async
+  {
+
+    await _engine?.leaveChannel();
+        await _engine?.stopPreview();
+        await _engine?.release();
+        _engine = null;
+
+
+  }
+
+
+  _acquire(BuildContext context) async
+  {
+    print("this is for acur ");
+    if(_channel!=null&&_remoteUid!=null)
+      {
+        var resp = await CallRecordApi().acquire(_channel!, _remoteUid!);
+    switch(resp.statusCode)
+    {
+      case 200:
+        var d = jsonDecode(resp.body);
+        _resourceId  =  d['token']['resourceId'];
+        break;
+
+      case 400:
+        MyHelper.snakeBar(context,title: 'Can,t acquire record',message: '${jsonDecode(resp.body)['message']}',type: SnakeBarType.error);
+        break;
+
+      case 403:
+        MyHelper.snakeBar(context,title: 'Denied',message: '${jsonDecode(resp.body)['message']}',type: SnakeBarType.error);
+        break;
+
+      case 401:
+        MyHelper.tokenExp(context);
+        break;
+
+      case 500:
+        MyHelper.serverError(context, resp.body);
+        break;
+
+      default:
+        MyHelper.serverError(context, '${resp.statusCode}\n${resp.body}',title: 'Exception');
+        break;
+
+    }
+      }
+  }
+
+
+
+
+
+  _startRecord(BuildContext context) async
+  {
+
+    await _acquire(context); 
+
+    log("this is for start \n $_channel \n $_remoteUid \n$_resourceId \n$_token");
+
+    if(_resourceId==null||_channel==null||_token==null||_remoteUid==null)
+      {
+        return;
+      }
+
+    var resp = await CallRecordApi().startRecord(
+        channelId: _channel!,
+        uid: _remoteUid??0,
+        resourceId: _resourceId!,
+        token: _token!,
+    );
+
+    switch (resp.statusCode)
+    {
+      case 200:
+        var d = jsonDecode(resp.body);
+        _recordingId = d['token']['sid'];
+        break;
+
+      case 400:
+        MyHelper.snakeBar(context,title: 'Can,t start record',message: '${jsonDecode(resp.body)['message']}',type: SnakeBarType.error);
+        break;
+
+      case 403:
+        MyHelper.snakeBar(context,title: 'Denied',message: '${jsonDecode(resp.body)['message']}',type: SnakeBarType.error);
+        break;
+
+      case 401:
+        MyHelper.tokenExp(context);
+        break;
+
+      case 500:
+        MyHelper.serverError(context, resp.body);
+        break;
+
+      default:
+        MyHelper.serverError(context, '${resp.statusCode}\n${resp.body}',title: 'Exception');
+        break;
+    }
+  }
+  
+  _stopRecord(BuildContext context) async
+  {
+    log("  \n $_channel \n $_remoteUid \n$_resourceId \n$_recordingId");
+    if(_recordingId==null||_channel==null||_remoteUid==null||_recordingId==null)
+      {
+        return;
+      }
+
+
+    var resp = await CallRecordApi().stopRecord(resourceId: _resourceId!, sid: _recordingId!, channel: _channel!, uid: _remoteUid!);
+    switch (resp.statusCode)
+    {
+      case 200:
+        _recordingId = null;
+        _resourceId = null;
+        break;
+
+      case 400:
+        MyHelper.snakeBar(context,title: 'Can,t stop record',message: '${jsonDecode(resp.body)['message']}',type: SnakeBarType.error);
+        break;
+
+      case 403:     
+        MyHelper.snakeBar(context,title: 'Denied',message: '${jsonDecode(resp.body)['message']}',type: SnakeBarType.error);
+        break;
+
+      case 401:
+        MyHelper.tokenExp(context);
+        break;
+
+      case 500:
+        MyHelper.serverError(context, resp.body);
+        break;    
+        
+        default:
+        MyHelper.serverError(context, '${resp.statusCode}\n${resp.body}',title: 'Exception');
+        break;
+    }
+  } 
 
 
 

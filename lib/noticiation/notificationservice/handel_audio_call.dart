@@ -36,12 +36,19 @@ handleAudioCall(RemoteMessage message) async
       {
         var p =  Provider.of<AudioCallProvider>(navigatorKey.currentContext!,listen: false);
         print("chackin if user is on call screen ${p.onCallScreen} ${p.onOutGoingCallScreen}");
-        if(p.onCallScreen||p.onOutGoingCallScreen)
+        if(p.onCallScreen)
         // if(p.onOutGoingCallScreen)
         {
+          p.updateOnCallScreen(false);
           print("Call id declined closing screen");
           Navigator.pop(navigatorKey.currentContext!);
         }
+        if(p.onOutGoingCallScreen)
+          {
+            p.updateOutGoingCallScreen(false);
+            print("Call id declined closing screen");
+            Navigator.pop(navigatorKey.currentContext!);
+          }
         p.leaveCall();
       }
   }
@@ -57,10 +64,16 @@ handleAudioCall(RemoteMessage message) async
     var p = Provider.of<AudioCallProvider>(navigatorKey.currentContext!,listen: false);
     print("chackin if user is on call screen ${p.onCallScreen}");
 
-    if(p.onCallScreen ||p.onOutGoingCallScreen)
+    if(p.onCallScreen)
     {
+      p.updateOnCallScreen(false);
       Navigator.pop(navigatorKey.currentContext!);
     }
+    if(p.onOutGoingCallScreen )
+      {
+        p.updateOutGoingCallScreen(false);
+        Navigator.pop(navigatorKey.currentContext!);
+      }
     p.leaveCall();
   }
 
@@ -74,8 +87,10 @@ handleAudioCall(RemoteMessage message) async
       var p = Provider.of<AudioCallProvider>(navigatorKey.currentContext!,listen: false);
       if(p.onOutGoingCallScreen)
       {
+        p.updateOutGoingCallScreen(false);
         Navigator.pop(navigatorKey.currentContext!);
       }
+
       p.joinCall(u: user, threadId: message.data['threadId'], callId: message.data['callId']);
     }
 
@@ -90,6 +105,7 @@ handleAudioCall(RemoteMessage message) async
         print("chackin if user is on call screen ${p.onCallScreen}");
         if(p.onCallScreen)
         {
+          p.updateOnCallScreen(false);
           Navigator.pop(navigatorKey.currentContext!);
         }
         p.leaveCall(update: false);

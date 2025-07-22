@@ -61,6 +61,8 @@ import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.embedding.engine.FlutterEngine
+import android.app.Activity
+
 
 class
 MainActivity: FlutterActivity() {
@@ -77,6 +79,10 @@ MainActivity: FlutterActivity() {
         }
     }
 
+
+
+
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -84,11 +90,14 @@ MainActivity: FlutterActivity() {
     }
 
     private fun handleCustomCallIntent(intent: Intent) {
+
         if (intent.action == "com.attachchat.app.ACTION_SHOW_CALL_SCREEN") {
 
             println("📲 App launched via ACTION_SHOW_CALL_SCREEN intent with data: ${intent.extras?.keySet()}")
 
             val data = mapOf("callId" to "12345", "callerName" to "Alice")
+
+
 
             // Use the initialized methodChannel safely
             methodChannel?.invokeMethod("showCallScreen", data)

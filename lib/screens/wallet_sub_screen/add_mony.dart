@@ -154,6 +154,7 @@
 
 import 'package:attach/api/transection_api.dart';
 import 'package:attach/componant/BackButton.dart';
+import 'package:attach/componant/ammount_filed.dart';
 import 'package:attach/componant/custom_text_formatters.dart';
 import 'package:attach/componant/custome_action_button.dart';
 import 'package:attach/const/app_constante.dart';
@@ -247,28 +248,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     onTap: () {
                       _focusNode.requestFocus();
                     },
-                    child: TextField(
-                      focusNode: _focusNode,
-                      autofocus: true,
-                      controller: _amountController,
-                      textAlign: TextAlign.center,
-                      cursorColor: Colors.white,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        MoneyInputFormatter()
-                      ],
-                      style: Const.font_900_20(context,
-                          size: SC.from_width(50)),
-                      decoration: InputDecoration(
-                        hintText: '₹ 0',
-                        hintStyle: Const.font_900_20(context,
-                            size: SC.from_width(50)),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedErrorBorder: InputBorder.none,
-                      ),
-                    ),
+                    child: AmountFiled(controller: _amountController,),
                   ),
                   Spacer(),
                   Row(

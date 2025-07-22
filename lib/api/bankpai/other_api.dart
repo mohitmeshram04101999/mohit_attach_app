@@ -141,10 +141,10 @@ class OtherApi
 
 
   var file2 = File(aadharBackImage);
-  final length2 = await file.length();
+  final length2 = await file2.length();
   int bytesSent2 = 0;
 
-  final stream2 = http.ByteStream(file.openRead().transform(
+  final stream2 = http.ByteStream(file2.openRead().transform(
     StreamTransformer.fromHandlers(
       handleData: (data, sink) {
         bytesSent2 += data.length;
@@ -180,8 +180,10 @@ class OtherApi
 
 
 
-  req.files.add(await multipartFile);
-  req.files.add(await multipartFile2);
+  req.files.addAll( await [multipartFile,multipartFile2]);
+
+  // req.files.add(await );
+  // req.files.add(await );
 
   var sResp = await req.send();
 
@@ -254,6 +256,20 @@ class OtherApi
 
   }
 
+
+  Future<http.Response> getAllQuestionForListener({int page=1}) async
+  {
+    String uri = '${PathApi.baseUri}${PathApi.getListerNerQuestion}?page=$page';
+
+    var head = await DB().getFormHeader();
+
+    var resp =  await http.get(Uri.parse(uri),headers: head);
+
+    respPrinter(uri, resp);
+
+    return resp;
+
+  }
 
 
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:attach/api/bankpai/mediaApi.dart';
 import 'package:attach/api/bankpai/other_api.dart';
@@ -139,6 +140,7 @@ class ChatProvider with ChangeNotifier {
     _socket?.on("messageStatusM", _messageStatusM);
     _socket?.on("sessionEnded", _sessionEnded);
     _socket?.on("chatSessionStart",_chatSessionStart);
+    _socket?.on("restrictMessage",_restrictMessage );
 
 
 
@@ -162,6 +164,12 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
+  _restrictMessage(dynamic data)
+  {
+    Logger().i(data);
+    MyHelper.snakeBar(navigatorKey.currentContext!, title: "Message Restricted", message: data['message'],type: SnakeBarType.error);
+  }
   _chatSessionStart(dynamic data)
   {
     print(
@@ -217,11 +225,11 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  sendMessage({String? mediaType, String? media}) {
-    if (_textEditingController.text.trim().isNotEmpty || mediaType != null) {
+  sendMessage({String? mediaType, String? media,String? message}) {
+    if ((message !=null ||_textEditingController.text.trim().isNotEmpty) || mediaType != null) {
       var p = {
         'toUserId': _user?.id ?? '',
-        'message': _textEditingController.text.trim(),
+        'message': message??((mediaType == null) ? _textEditingController.text : null),
         'mediaType': mediaType,
         'media': media,
         "messageType": (mediaType == null) ? null : 'DOC_MESSAGE',
@@ -271,6 +279,7 @@ class ChatProvider with ChangeNotifier {
     _typing = false;
     _sessionExpired = false;
     _textEditingController.clear();
+    _sessionId = null;
     print("chat provider is clear");
   }
 
@@ -288,10 +297,16 @@ class ChatProvider with ChangeNotifier {
     // _socket?.offAny();
     Logger().i('');
 
+
     // _socket?.on("threadMessages", _threadMessages);
     // _socket?.on("userTyping", _userTyping);
     // _socket?.on("messageSeen", _messageSeen);
     // _socket?.on("newMessage", _newMessage);
+    // _socket?.on("messageStatusM", _messageStatusM);
+    // _socket?.on("sessionEnded", _sessionEnded);
+    // _socket?.on("chatSessionStart",_chatSessionStart);
+    // _socket?.on("restrictMessage",_restrictMessage );
+
 
     _socket?.off("newMessage", (d) => Logger().i("newMessage is of $d"));
     _socket?.off('userTyping', (d) => Logger().i("userTyping is of $d"));
@@ -302,6 +317,8 @@ class ChatProvider with ChangeNotifier {
     );
     _socket?.off("messageStatusM");
     _socket?.off("sessionEnded");
+    _socket?.off("chatSessionStart");
+    _socket?.off("restrictMessage");
     _messages = [];
     _user = null;
     _threadId = null;
@@ -310,6 +327,7 @@ class ChatProvider with ChangeNotifier {
     _sessionExpired = false;
     _textEditingController.clear();
     _loading = true;
+    _sessionId = null;
   }
 
   void disconnectSocket() {
@@ -354,6 +372,9 @@ class ChatProvider with ChangeNotifier {
         return;
       }
 
+
+      String? attachMessage = _textEditingController.text.isEmpty?null:_textEditingController.text.trim();
+
       var resp = await MediaApi().sendMediaInMessage(image.path ?? '', (
           d,
           ) async {
@@ -377,17 +398,26 @@ class ChatProvider with ChangeNotifier {
       switch (resp.statusCode) {
         case 201:
           {
+
+            print("Media is uploaded");
             var d = jsonDecode(resp.body);
 
             String url = d['media'];
 
+            print("url is $url");
+
+            print('this is file tiye ${url.isImageFileName}  ${url.isVideoFileName}');
+
+
             if (url.isImageFileName) {
-              sendMessage(mediaType: 'IMAGE', media: url);
+              sendMessage(mediaType: 'IMAGE', media: url,message: attachMessage);
             } else if (url.isVideoFileName) {
               sendMessage(mediaType: "VIDEO", media: url);
             } else {
               sendMessage(mediaType: 'DOCUMENT', media: url);
             }
+
+            print("Media is send ");
           }
           break;
 
@@ -466,10 +496,14 @@ class ChatProvider with ChangeNotifier {
       switch (resp.statusCode) {
         case 201:
           {
+            log("Media is upload and sendMessageCalled");
             var d = jsonDecode(resp.body);
+            log("Media is decode");
 
             String url = d['media'];
             String mediaType = d['mediaType'];
+
+            log("checkin media type and set for uload");
 
             if (url.isImageFileName) {
               sendMessage(mediaType: 'IMAGE', media: url);
@@ -478,6 +512,9 @@ class ChatProvider with ChangeNotifier {
             } else {
               sendMessage(mediaType: 'DOCUMENT', media: url);
             }
+
+
+            print("Media is upload and sendMessageCalled");
           }
           break;
 

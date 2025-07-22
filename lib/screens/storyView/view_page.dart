@@ -179,6 +179,7 @@ class _StoryViewPageState extends State<StoryViewPage> {
                                                 ),
                                               ),
                                               SizedBox(width: SC.from_width(5)),
+                                            if(p.story[i].listener?.userVerified??false)
                                               Image.asset(
                                                 "assets/icons/verIcon.png",
                                                 width: SC.from_width(13),

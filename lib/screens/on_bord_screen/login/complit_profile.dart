@@ -66,15 +66,19 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                 controller: p.mailController,
                   label: 'Your Email',
                   hintText: 'Enter Your Email',
-                validator: (d){
-                  if(d==null||d.isEmpty)
-                    {
-                      return 'Enter Your gmail';
-                    }
-                  else if(d.endsWith("@gmail.com")==false)
-                    {
-                      return 'Enter Proper Gmail Address';
-                    }
+                validator: (d) {
+                  if (d == null || d.isEmpty) {
+                    return 'Enter your email';
+                  }
+
+                  // General email regex
+                  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+                  if (!emailRegex.hasMatch(d)) {
+                    return 'Enter a valid email address';
+                  }
+
+                  return null; // Valid
                 },
               ),
               SizedBox(height: SC.from_width(20)),

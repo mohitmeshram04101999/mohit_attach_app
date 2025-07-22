@@ -1,8 +1,13 @@
 
+import 'dart:developer';
+
+import 'package:attach/api/authAPi.dart';
+import 'package:attach/bd/bg_main.dart';
 import 'package:attach/const/app_constante.dart';
 
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/providers/call_kit_mennager.dart';
 
 import 'package:attach/providers/home_provider_1.dart';
 import 'package:attach/providers/profileProvider.dart';
@@ -15,6 +20,7 @@ import 'package:attach/screens/storyView/add_test_story_screen.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -134,7 +140,10 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                       if (p.user?.userVerified != true)
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 14),
-                          color: Color.fromRGBO(148, 38, 38, 0.5),
+                          color:
+                          p.user?.kycStatus=='PENDING'?
+                            Const.yellow.withOpacity(.5):
+                          Color.fromRGBO(148, 38, 38, 0.5),
                           height: SC.from_width(66),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -150,10 +159,14 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "you are unverified",
+                                      "you are unverified${(kDebugMode)?'':''}",
                                       style: Const.font_700_16(context),
                                     ),
                                     Text(
+                                      p.user?.kycStatus=='PENDING'?
+                                          'Your KYC is under review':
+                                      p.user?.kycStatus=='REJECTED'?
+                                          'Your KYC is rejected':
                                       "Verify your profile to earn more",
                                       style: Const.font_400_12(
                                         context,
@@ -166,14 +179,24 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
 
                               SizedBox(
                                 height: SC.from_width(35),
+                                
+                                
                                 child: OutlinedButton(
                                   onPressed: () {
-                                    RoutTo(
-                                      context,
-                                      child: (p0, p1) => KycScreen(),
-                                    );
+                                    if(p.user?.kycStatus=='PENDING')return;
+                                    else
+                                      {
+                                        RoutTo(
+                                          context,
+                                          child: (p0, p1) => KycScreen(),
+                                        );
+                                      }
+
+
                                   },
                                   child: Text(
+                                    (p.user?.kycStatus=='PENDING')?
+                                        'Pending':
                                     "Get Verify",
                                     style: Const.font_700_16(
                                       context,
@@ -187,6 +210,9 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                         ),
 
                       SizedBox(height: SC.from_width(20)),
+
+                      if(kDebugMode)
+                        Text('${p.user?.online}'),
 
                       SizedBox(
                         height: SC.from_width(60),
@@ -504,7 +530,7 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Image.asset(
-                            "assets/icons/soty_icon/2dc2f413434b1a638282711334d0cbe41df7e56f.png",
+                            "assets/newIcons/img_3.png",
                             width: SC.from_width(25),
                           ),
 
@@ -535,7 +561,7 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Image.asset(
-                    "assets/icons/soty_icon/bcac8f8f3dc87c7307a9b9d6434361f22cdee9de.png",
+                    "assets/newIcons/img_4.png",
                     width: SC.from_width(30),
                   ),
                       onPressed: (){
@@ -567,7 +593,7 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Image.asset(
-                    "assets/icons/soty_icon/d30a67343b21847156a347152ec193cc57be8df2.png",
+                    "assets/newIcons/img_5.png",
                     width: SC.from_width(30),
                   ),
 
@@ -600,22 +626,15 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                     width: SC.from_width(30),
                   ),
 
+
+
                   onPressed: () async {
-                    isShow = !isShow;
+
+                        log(DateTime.now().toIso8601String());
+
+                        isShow = !isShow;
                     setState(() {});
-                    
-                    // CallKitManager().startCall();
-                    // CallKitManager().callConnected("asdfasd");
 
-
-
-                    // var d =  await DB().getSomeDate();
-
-                    // OpenDailogWithAnimation(context, dailog: (animation, secondryAnimation) => AlertDialog(
-                    //   title:Text("action riceved this is from cackground"),
-                    //   content: Text("${d.text}"),    ));
-
-                    //  NotificationService().getToken();
                   },
                 ),
               ),

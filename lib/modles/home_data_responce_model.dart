@@ -183,14 +183,16 @@ class Listener {
   final String? name;
   final String? image;
   final SetAvailability? setAvailability;
+  final bool? userVerified;
 
-  Listener({this.id, this.name,this.image,this.setAvailability});
+  Listener({this.id, this.name,this.image,this.setAvailability, this.userVerified});
 
   factory Listener.fromJson(Map<String, dynamic> json) {
     return Listener(
       id: json['_id'] ,
       name: json['name'],
       image: json['image'] ,
+      userVerified: json['userVerified'],
       setAvailability: json['setAvailability'] == null
           ? null
           : SetAvailability.fromJson(json['setAvailability']),
@@ -203,6 +205,7 @@ class Listener {
       'name': name,
       'image':image,
       'setAvailability': setAvailability?.toJson(),
+      'userVerified': userVerified
     };
   }
 }
@@ -271,6 +274,7 @@ class SelfStoryModel {
   final String? timeAgo;
   final int? v;
   final bool? isLike;
+  final DateTime? createdAt;
 
   SelfStoryModel({
     this.id,
@@ -282,6 +286,7 @@ class SelfStoryModel {
     this.seenCount,
     this.likeCount,
     this.v,
+    this.createdAt
   });
 
   factory SelfStoryModel.fromJson(Map<String, dynamic> json) {
@@ -295,6 +300,7 @@ class SelfStoryModel {
       likeCount: json['likeCount']  ,
       v: json['__v'] ,
       timeAgo: json['timeAgo'],
+      createdAt: json['createdAt'] == null ? null : DateTime.parse(json["createdAt"]),
 
     );
   }
@@ -309,7 +315,8 @@ class SelfStoryModel {
       'seenCount': seenCount,
       'likeCount': likeCount,
       '__v': v,
-      'timeAgo':timeAgo
+      'timeAgo':timeAgo,
+      'createdAt': createdAt?.toIso8601String(),
 
     };
   }

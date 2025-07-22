@@ -72,9 +72,7 @@ class ListenerProfileDetailProvider with ChangeNotifier
     var resp = await ListenerApi().followAndUnFollow(_detail?.id??'');
     switch(resp.statusCode) {
       case 200:
-        var d = jsonDecode(resp.body);
-        var _d = User.fromJson(d['data']);
-        _detail = _d;
+         await getDetail(context, _detail?.id??'');
         notifyListeners();
         break;
 

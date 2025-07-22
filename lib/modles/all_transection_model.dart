@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:attach/modles/otp_responce.dart';
+
 AllTransectionResponceModel allTransectionResponceModelFromJson(String str) => AllTransectionResponceModel.fromJson(json.decode(str));
 
 String allTransectionResponceModelToJson(AllTransectionResponceModel data) => json.encode(data.toJson());
@@ -42,7 +44,7 @@ class AllTransectionResponceModel {
 
 class TransectionInfo {
   String? id;
-  String? userId;
+  User? userId;
   String? amount;
   String? type;
   String? status;
@@ -67,7 +69,7 @@ class TransectionInfo {
 
   factory TransectionInfo.fromJson(Map<String, dynamic> json) => TransectionInfo(
     id: json["_id"],
-    userId: json["userId"],
+    userId: json["userId"] == null ? null : User.fromJson(json["userId"]),
     amount: json["amount"],
     type:  json["Type"],
     status: json["status"],
@@ -80,7 +82,7 @@ class TransectionInfo {
 
   Map<String, dynamic> toJson() => {
     "_id": id,
-    "userId": userId,
+    "userId": userId?.toJson(),
     "amount": amount,
     "Type":  type,
     "status": status,

@@ -54,6 +54,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     super.dispose();
     var p =  Provider.of<AudioCallProvider>(navigatorKey.currentContext!,listen: false);
     p.updateOnCallScreen(false);
+
   }
 
 
@@ -156,8 +157,10 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                         onTap: ()async{
                           if(canTap)
                             {
+
                               canTap = false;
                               await p.leaveCall(update: true);
+                              p.updateOnCallScreen(false);
                               Navigator.pop(context);
                               canTap  = true;
                             }

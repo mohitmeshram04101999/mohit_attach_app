@@ -100,7 +100,7 @@ class PrivecyPolicyScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text("Privecy Policy"),
+        title: Text("Privacy Policy"),
       ),
       body: FutureBuilder<CompanyResponce?>(
         future: OtherApi().getCompany(),

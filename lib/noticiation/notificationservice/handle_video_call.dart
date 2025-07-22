@@ -37,10 +37,16 @@ handleVideoCall(RemoteMessage message) async
     var p =  Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false);
     print("chackin if user is on call screen ${p.isOnCallScreen}");
 
-    if(p.isOnCallScreen||p.outGoingCallScreen)
+    if(p.isOnCallScreen)
     {
+      p.onCall(false);
       Navigator.pop(navigatorKey.currentContext!);
     }
+    if(p.outGoingCallScreen)
+      {
+        p.updateOutGoingCallStatus(false);
+        Navigator.pop(navigatorKey.currentContext!);
+      }
     Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false).leaveCall();
   }
   if(message.data['status']=="MISSED")
@@ -57,10 +63,16 @@ handleVideoCall(RemoteMessage message) async
     var p = Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false);
     print("chackin if user is on call screen ${p.isOnCallScreen}");
 
-    if(p.isOnCallScreen ||p.outGoingCallScreen)
+    if(p.isOnCallScreen)
     {
+      p.onCall(false);
       Navigator.pop(navigatorKey.currentContext!);
     }
+    if(p.outGoingCallScreen)
+      {
+        p.updateOutGoingCallStatus(false);
+        Navigator.pop(navigatorKey.currentContext!);
+      }
     Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false).leaveCall();
   }
 
@@ -74,9 +86,10 @@ handleVideoCall(RemoteMessage message) async
           var p = Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false);
           if(p.outGoingCallScreen)
           {
+            p.updateOutGoingCallStatus(false);
             Navigator.pop(navigatorKey.currentContext!);
           }
-          ReplaceTo(navigatorKey.currentContext!, child: (p0, p1) =>VideoCallScreen(user: user, callId: message.data['callId'], channelId: message.data['threadId']),);
+          RoutTo(navigatorKey.currentContext!, child: (p0, p1) =>VideoCallScreen(user: user, callId: message.data['callId'], channelId: message.data['threadId']),);
         }
     }
 
@@ -85,10 +98,16 @@ handleVideoCall(RemoteMessage message) async
     CallKitManager().callEnd(message.data['callId']);
     var p = Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false);
     print("chackin if user is on call screen ${p.isOnCallScreen} or ${p.outGoingCallScreen}");
-    if(p.isOnCallScreen||p.outGoingCallScreen)
+    if(p.isOnCallScreen)
     {
+      p.onCall(false);
       Navigator.pop(navigatorKey.currentContext!);
     }
+    if(p.outGoingCallScreen)
+      {
+        p.updateOutGoingCallStatus(false);
+        Navigator.pop(navigatorKey.currentContext!);
+      }
     Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false).leaveCall(update: false);
   }
 

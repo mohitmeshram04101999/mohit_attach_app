@@ -24,6 +24,7 @@ class _WalletScreenState extends State<WalletScreen> {
     // TODO: implement initState
     super.initState();
     Provider.of<TransectionHistoryProvider>(context,listen: false).refresh(context);
+    Provider.of<ProfileProvider>(context,listen: false).getUser(context);
   }
 
   @override

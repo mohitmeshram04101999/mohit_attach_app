@@ -186,8 +186,8 @@ class NotificationService{
        [
          NotificationChannel(
              channelKey: 'NOTIFICATION_CHANNEL',
-             channelName: 'NOTIFICATION_CHANNEL',
-             channelDescription: 'Notification tests as alerts',
+             channelName: 'Notification Channel',
+             channelDescription: 'For Displaying Notification and Alerts',
              playSound: true,
              onlyAlertOnce: true,
              groupAlertBehavior: GroupAlertBehavior.Children,
@@ -201,33 +201,36 @@ class NotificationService{
 
 
 
-   await AwesomeNotifications().initialize(
-       null, //'resource://drawable/res_app_icon',//
-       [
-         NotificationChannel(
-             channelKey: 'TEST',
-             channelName: 'TEST',
-             channelDescription: 'Notification tests as alerts',
-             playSound: true,
-             onlyAlertOnce: true,
-             groupAlertBehavior: GroupAlertBehavior.Children,
-             locked: true,
-             criticalAlerts: true,
-             importance: NotificationImportance.Max,
-             defaultPrivacy: NotificationPrivacy.Private,
-             defaultColor: Colors.deepPurple,
-             ledColor: Colors.deepPurple
-         )
-       ],
-       debug: true);
+  if(kDebugMode)
+    {
+      await AwesomeNotifications().initialize(
+          null, //'resource://drawable/res_app_icon',//
+          [
+            NotificationChannel(
+                channelKey: 'TEST',
+                channelName: 'TEST',
+                channelDescription: 'Notification tests as alerts',
+                playSound: true,
+                onlyAlertOnce: true,
+                groupAlertBehavior: GroupAlertBehavior.Children,
+                locked: true,
+                criticalAlerts: true,
+                importance: NotificationImportance.Max,
+                defaultPrivacy: NotificationPrivacy.Private,
+                defaultColor: Colors.deepPurple,
+                ledColor: Colors.deepPurple
+            )
+          ],
+          debug: true);
+    }
 
    await AwesomeNotifications().initialize(
        null, //'resource://drawable/res_app_icon',//
        [
          NotificationChannel(
              channelKey: 'VIDEO_CALL_CHANNEL',
-             channelName: 'VIDEO_CALL_CHANNEL',
-             channelDescription: 'Notification tests as alerts',
+             channelName: 'Video Call Channel',
+             channelDescription: 'If you disable this channel, you will not receive video call notifications.',
              playSound: true,
              onlyAlertOnce: true,
              groupAlertBehavior: GroupAlertBehavior.Children,
@@ -249,8 +252,8 @@ class NotificationService{
        [
          NotificationChannel(
              channelKey: 'AUDIO_CALL_CHANNEL',
-             channelName: 'AUDIO_CALL_CHANNEL',
-             channelDescription: 'Notification tests as alerts',
+             channelName: 'Audio Call Channel',
+             channelDescription: 'If you disable this channel, you will not receive audio call notifications.',
            playSound: true,
            onlyAlertOnce: true,
            groupAlertBehavior: GroupAlertBehavior.Children,
@@ -273,8 +276,8 @@ class NotificationService{
        [
          NotificationChannel(
            channelKey: 'UPLOAD_FILE',
-           channelName: 'UPLOAD_FILE',
-           channelDescription: 'Notification tests as alerts',
+           channelName: 'Upload File Channel',
+           channelDescription: 'For Uploading Files',
            playSound: true,
            onlyAlertOnce: true,
            groupAlertBehavior: GroupAlertBehavior.Children,
@@ -297,11 +300,11 @@ class NotificationService{
 
 
 
-  void initCallKitListener() {
-    FlutterCallkitIncoming.onEvent.listen((event) {
-      callKitActionhanlde(event);
-    });
-  }
+  // void initCallKitListener() {
+  //   FlutterCallkitIncoming.onEvent.listen((event) {
+  //     callKitActionhanlde(event);
+  //   });
+  // }
 
 
  showNotification(RemoteMessage message,{bool fromBackGround =false}) async

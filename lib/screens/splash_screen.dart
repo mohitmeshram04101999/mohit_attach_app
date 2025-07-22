@@ -3,6 +3,7 @@ import 'package:attach/providers/profileProvider.dart';
 import 'package:attach/providers/videoCallProvider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 
@@ -29,11 +30,23 @@ class _SplashScreenState extends State<SplashScreen> {
   {
 
      await NotificationService().getNotificationPermission();
+     await getPermmission();
     Provider.of<ProfileProvider>(context,listen: false).checkUserLogIn(context,widget.action);
 
 
      final provider = Provider.of<VideoCallProvider>(context, listen: false);
      await provider.getPermmission();
+  }
+
+
+  getPermmission()async{
+
+    var p1 = await  Permission.microphone.request();
+    var b1 =  await Permission.bluetoothConnect.request();
+    var b2   =  await Permission.bluetoothScan.request();
+
+    print("this is permission statuse of \n b1 $b1 \n b2 $b2 \n p1 $p1");
+
   }
 
   @override

@@ -1,5 +1,4 @@
 import 'package:attach/api/local_db.dart';
-import 'package:attach/bd/bd_call_event_handler.dart';
 import 'package:attach/bd/bg_main.dart';
 import 'package:attach/callScreens/AudioCallScreen.dart';
 
@@ -9,6 +8,7 @@ import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/noticiation/notificationService.dart';
+import 'package:attach/providers/appLifesycalProvider.dart';
 
 import 'package:attach/providers/home_provider.dart';
 
@@ -87,11 +87,45 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
 initMyApp() async{
 
-  await initBgService();
-  await addBGListener();
+
+
+   // -----------------------------------This is new code---------------------------------------
+
+  var  profile  =  Provider.of<ProfileProvider>(navigatorKey.currentContext!,listen: false);
+
+  // if(profile.user?.userType==UserType.listener)
+  //   {
+  //     await initBgService();
+  //     await addBGListener();
+  //   }
+
+  // -----------------------------------This is new code---------------------------------------
+
+  // -----------------------------------This is old code---------------------------------------
+
+
+  //     await initBgService();
+  //     await addBGListener();
+
+  // -----------------------------------This is old code---------------------------------------
+
+
+  // await addBGListener();
+
+  if(appOpen==false&&profile.user?.userType==UserType.listener)
+    {
+      await initBgService();
+    }
+
+
+  var appLifeCycle = Provider.of<AppLifeCycleProvider>(navigatorKey.currentContext!,listen: false);
+
+   await appLifeCycle.init();
+
   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     checkIfHaseAction();
   });
+
 
 }
 
@@ -221,7 +255,7 @@ initMyApp() async{
                 width: SC.from_width(20),
                 child: Image.asset('assets/icons/home_icon/inbox.png',color: Colors.white,)),
             icon: Icons.inbox,
-            text: 'inbox',),
+            text: 'Inbox',),
         
         
           GButton(

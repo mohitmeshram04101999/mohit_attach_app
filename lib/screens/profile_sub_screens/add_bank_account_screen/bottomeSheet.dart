@@ -79,7 +79,7 @@ class _BankBottomSheetState extends State<BankBottomSheet> {
                 SizedBox(height: SC.from_width(20),),
                 CustomTextField(
                   controller: p.holderName,
-                  label: 'Bank Account holder name',
+                  label: 'Bank Account Holder Name',
                   hintText: 'Enter full name',
                   formatters: [CapitalizeEachWordFormatter()],
 
@@ -89,17 +89,25 @@ class _BankBottomSheetState extends State<BankBottomSheet> {
 
                 CustomTextField(
                   controller: p.bankAccountNumber,
-                  label: 'Account  number',
+                  label: 'Account  Number',
                   hintText: 'Enter your account number',
                   keyTyp: TextInputType.number,
                   formatters: [FilteringTextInputFormatter.digitsOnly],
+
+                ),
+                SizedBox(height: SC.from_width(12),),
+                CustomTextField(
+                  controller: p.bankName,
+                  label: 'Bank Name',
+                  hintText: 'Enter Your Bank Name',
+
 
                 ),
 
                 SizedBox(height: SC.from_width(12),),
                 CustomTextField(
                   controller: p.ifscCode,
-                  label: 'IFSC code',
+                  label: 'IFSC Code',
                   hintText: 'Enter your IFSC code',
                   formatters: [
                     UpperCaseTextFormatter(),

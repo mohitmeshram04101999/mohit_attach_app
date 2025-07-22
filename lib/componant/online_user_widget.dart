@@ -74,10 +74,10 @@ class OnlineUserWidget extends StatelessWidget {
                         children: [
 
                           Hero(
-                            tag: "${listener?.id}${listener?.image??''}",
+                            tag:listener?.id??'',
                             child: GestureDetector(
                               onTap: (){
-                                RoutTo(context, child: (p0, p1) => ListenerProfileDetailScreen(data: data,listener: listener,),);
+                                RoutTo(context, child: (p0, p1) => ListenerProfileDetailScreen(data: data,id: listener?.id??'',),);
                               },
                               child: Container(
                                 height: double.infinity,

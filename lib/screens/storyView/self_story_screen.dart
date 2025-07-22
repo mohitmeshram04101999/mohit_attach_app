@@ -8,6 +8,8 @@ import 'package:attach/componant/storyProgress.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/home_data_responce_model.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/other/date_time_manager.dart';
+import 'package:attach/providers/profileProvider.dart';
 import 'package:attach/providers/selfStoryProvider.dart';
 import 'package:attach/providers/story_provider.dart';
 import 'package:attach/screens/home_sub_screen/story_view_bottom_sheet.dart';
@@ -106,20 +108,23 @@ class _SelfStoryViewPageState extends State<SelfStoryViewPage> {
                       child: OnlineUserImageWidget(image: DB.curruntUser?.image??'',online: false,asset: false,),),
                     SizedBox(width: SC.from_width(10),),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('My Story',style: Const.font_700_16(context),),
-                              SizedBox(width: SC.from_width(5),),
-                              Image.asset("assets/icons/verIcon.png",width: SC.from_width(13),),
-                            ],
-                          ),
-                          Text("${p.story[pad].timeAgo??''}",style: Const.font_900_20(context,size: SC.from_width(10),color: Colors.grey),)
-                        ],),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, prof, child) =>  Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('My Story',style: Const.font_700_16(context),),
+                                SizedBox(width: SC.from_width(5),),
+                                if(prof.user?.userVerified==true)
+                                  Image.asset("assets/icons/verIcon.png",width: SC.from_width(13),),
+                              ],
+                            ),
+                            Text(DateTimeManager().formatTime12Hour(p.story[pad].createdAt)??'',style: Const.font_900_20(context,size: SC.from_width(10),color: Colors.grey),)
+                          ],),
+                      ),
                     ),
                     PopupMenuButton(
                       color: Colors.white,

@@ -92,6 +92,7 @@ dev_dependencies:
   change_app_package_name: ^1.5.0
   icons_launcher: ^3.0.1
   logger: ^2.5.0
+  no_screenshot: ^0.3.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -122,6 +123,7 @@ flutter:
     - assets/icons/checks/
     - assets/icons/soty_icon/
     - assets/icons/transection_History_icons/
+    - assets/newIcons/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

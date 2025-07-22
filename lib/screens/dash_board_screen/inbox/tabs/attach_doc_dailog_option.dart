@@ -43,11 +43,13 @@ class AttachDocDialogOption extends StatelessWidget {
                       border: Border.all(color: Const.yellow,width:1),
                     ),
                     child: InkWell(
-                        onTap: (){p.uploadMediaFromCamera(context);
+                        onTap: (){
+                          p.uploadMediaFromCamera(context);
                           Navigator.pop(context);},
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Image.asset("assets/icons/soty_icon/2dc2f413434b1a638282711334d0cbe41df7e56f.png",width: SC.from_width(20),height: SC.from_width(40)),
+                          // child: Image.asset("assets/icons/soty_icon/2dc2f413434b1a638282711334d0cbe41df7e56f.png",width: SC.from_width(20),height: SC.from_width(40)),
+                          child: Image.asset("assets/newIcons/img_3.png",color: Colors.white,width: SC.from_width(20),height: SC.from_width(40)),
                         ))),
                 Text("Camera Image",style: Const.font_400_14(context),),
               ],
@@ -73,7 +75,7 @@ class AttachDocDialogOption extends StatelessWidget {
                           },
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Image.asset("assets/icons/soty_icon/videocamera.png",width: SC.from_width(20),height: SC.from_width(40)),
+                          child: Image.asset("assets/newIcons/img_6.png",color: Colors.white,width: SC.from_width(20),height: SC.from_width(40)),
                         ))),
                 Text("Camera Video",style: Const.font_400_14(context),),
               ],
@@ -99,32 +101,32 @@ class AttachDocDialogOption extends StatelessWidget {
                         },
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Image.asset("assets/icons/soty_icon/bcac8f8f3dc87c7307a9b9d6434361f22cdee9de.png",width: SC.from_width(20),height: SC.from_width(40)),
+                          child: Image.asset("assets/newIcons/img_4.png",color: Colors.white,width: SC.from_width(20),height: SC.from_width(40)),
                         ))),
                 Text("Gallery",style: Const.font_400_14(context),),
               ],
             ),
 
 
-            //
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Ink(
-                    width: SC.from_width(50),
-                    height: SC.from_width(50),
-                    decoration: BoxDecoration(
-                        color: Const.scaffoldColor,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Const.yellow,width:1)
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Image.asset("assets/icons/soty_icon/docs.png",width: SC.from_width(20),height: SC.from_width(40)),
-                    )),
-                Text("Documents",style: Const.font_400_14(context),),
-              ],
-            ),
+            // //
+            // Column(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Ink(
+            //         width: SC.from_width(50),
+            //         height: SC.from_width(50),
+            //         decoration: BoxDecoration(
+            //             color: Const.scaffoldColor,
+            //             borderRadius: BorderRadius.circular(8),
+            //             border: Border.all(color: Const.yellow,width:1)
+            //         ),
+            //         child: Padding(
+            //           padding: EdgeInsets.all(10),
+            //           child: Image.asset("assets/icons/soty_icon/docs.png",width: SC.from_width(20),height: SC.from_width(40)),
+            //         )),
+            //     Text("Documents",style: Const.font_400_14(context),),
+            //   ],
+            // ),
 
 
 

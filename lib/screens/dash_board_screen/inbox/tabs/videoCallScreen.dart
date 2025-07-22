@@ -8,6 +8,7 @@ import 'package:attach/modles/otp_responce.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/providers/videoCallProvider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -125,15 +126,27 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                   children: [
                     Column(
                       children: [
-                        Text('${p.user?.name??''}', style: TextStyle(color: Colors.white, fontSize: 20)),
+                        Text('${p.user?.name??''}${(kDebugMode)?'(${p.remoteUid})':''}', style: TextStyle(color: Colors.white, fontSize: 20)),
                         SizedBox(height: 4),
                         // Text("15:36 mins", style: TextStyle(color: Colors.white70, fontSize: 14)),
                         if(p.remoteUid!=null)...[
                           CallTimer()
                         ]
                         else...[
-                          Text("Calling")
-                        ]
+                          Text("")
+                        ],
+
+                        if(kDebugMode)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                // Text(p.resourceId.toString(),maxLines: null,),
+                                Text(p.recordingId.toString()),
+                              ],
+                            ),
+                          )
+
                       ],
                     ),
                   ],
@@ -158,6 +171,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                               rtcEngine: p.engine!,
                               canvas: VideoCanvas(uid: 0),
                             ),
+
                           ),
                           Positioned(
                             bottom: 8,
@@ -222,6 +236,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                           {
                             canTap = false;
                             await p.leaveCall(update: true);
+                            p.onCall(false);
                             Navigator.pop(context);
                             canTap = true;
                           }
@@ -235,7 +250,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
 
                   ],
                 ),
-              )
+              ),
+
+              //
             ],
           ),
         ),

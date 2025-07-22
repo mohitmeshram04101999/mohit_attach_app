@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:attach/api/bankpai/bankeApi.dart';
 import 'package:attach/modles/get_All_Bank.dart';
@@ -73,7 +74,7 @@ class BankProvider with ChangeNotifier
 
     if(_accountType=='BANK')
       {
-        if(_holderName.text.trim().isEmpty||_bankAccountNumber.text.trim().isEmpty||_ifscCode.text.trim().isEmpty)
+        if(_holderName.text.trim().isEmpty||_bankAccountNumber.text.trim().isEmpty||_ifscCode.text.trim().isEmpty||_bankName.text.trim().isEmpty)
           {
             MyHelper.snakeBar(context, title: 'Incomplete Bank Detail', message: 'Provide Your Bank Detail');
             return ;
@@ -152,6 +153,7 @@ class BankProvider with ChangeNotifier
 
   getAllAccount(BuildContext context) async
   {
+    log("Calling for get Account");
 
     Response resp = await BankApi().getBankAccounts();
 
@@ -160,8 +162,12 @@ class BankProvider with ChangeNotifier
       case 200:
         var d = jsonDecode(resp.body);
         GetAllBankResponceModel data = GetAllBankResponceModel.fromJson(d);
-        _account = data.data??[];
-        _selectedAccount ??= _account[0];
+        if(data.data!=null&&data.data!.isNotEmpty)
+          {
+            _account = data.data??[];
+            _selectedAccount ??= _account[0];
+          }
+
         break;
 
       case 400:

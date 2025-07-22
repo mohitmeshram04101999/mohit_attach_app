@@ -123,7 +123,8 @@ class TransectionHistoryProvider with ChangeNotifier {
     switch (resp.statusCode) {
       case 201:
         var d = jsonDecode(resp.body);
-        _transectionInfo.add(TransectionInfo.fromJson(d['data']));
+        // _transectionInfo.add(TransectionInfo.fromJson(d['data']));
+        refresh(context);
         await Provider.of<ProfileProvider>(
           context,
           listen: false,
@@ -200,7 +201,7 @@ class TransectionHistoryProvider with ChangeNotifier {
     switch (resp.statusCode) {
       case 201:
         var d = jsonDecode(resp.body);
-        _transectionInfo.add(TransectionInfo.fromJson(d['data']));
+        await refresh(context);
         await Provider.of<ProfileProvider>(
           context,
           listen: false,

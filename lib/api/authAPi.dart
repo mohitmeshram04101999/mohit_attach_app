@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:attach/api/apiPath.dart';
 import 'package:attach/api/local_db.dart';
+import 'package:attach/myfile/animated%20dilog.dart';
+import 'package:attach/noticiation/notificationService.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
@@ -22,6 +25,7 @@ respPrinter(String uri,http.Response resp)
         Logger().t('$uri\n${resp.statusCode}\n${resp.body}');
       }
     }
+  else
   {
     print(uri);
     print(resp.body);
@@ -74,6 +78,8 @@ class AuthApi{
 
     String uri = '${PathApi.baseUri}${PathApi.goOnlineOrOffline}';
 
+
+
     var resp = await http.put(Uri.parse(uri),
         body: jsonEncode({
           "userId":DB.curruntUser?.id,
@@ -115,12 +121,16 @@ class AuthApi{
 }) async
   {
 
+
+    String? fcmToken = await NotificationService().getToken();
+
     var data = {
       "phoneNumber":mobileNumber,
       "name":fullName,
       "email":mail,
       "gender":gender,
-      'languages':language
+      'languages':language,
+      'fcmToken':fcmToken,
     };
     Logger().t(data);
 

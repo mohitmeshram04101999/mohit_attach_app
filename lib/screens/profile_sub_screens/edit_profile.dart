@@ -35,7 +35,6 @@ class _EditProfileState extends State<EditProfile> {
       builder:
           (context, p, child) => WillPopScope(
             onWillPop: () async {
-              p.clearEdit(context);
               return true;
             },
             child: Scaffold(

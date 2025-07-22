@@ -34,8 +34,8 @@ class ListerCard extends StatelessWidget {
         children: [
           Text("Want to become a Listener?",style: Const.font_500_18(context),),
           SizedBox(height: SC.from_width(6),),
-          Text("Start your journey by completing Aadhaar KYC verification",style: Const.font_400_12(context),),
-          SizedBox(height: SC.from_width(8),),
+          Text("Want to earn extra money in your free time? Join us! Just answer a few simple questions and do a quick KYC.",style: Const.font_400_12(context),),
+          SizedBox(height: SC.from_width(9),),
           SizedBox(
             height: SC.from_width(44),
               child: CustomActionButton(action: (){

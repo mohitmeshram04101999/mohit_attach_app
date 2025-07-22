@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:attach/componant/BackButton.dart';
 import 'package:attach/componant/ammount_filed.dart';
 import 'package:attach/componant/custome_action_button.dart';
@@ -29,6 +31,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    log("Hey this is init state");
     Provider.of<BankProvider>(context,listen: false).getAllAccount(context);
   }
 
@@ -93,10 +96,18 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
                           // return Text("${b.selectedAccount?.type=='UPI'}");
 
-                          if(b.loading&&b.selectedAccount==null)
+                          if(b.loading)
                           {
                             return Text("loading...");
                           }
+                          else if(b.account.isEmpty)
+                            {
+                              return Text('Add Account',style: Const.font_500_14(context,color: Color.fromRGBO(190, 190, 190, 1)),);
+                            }
+                          else if(b.selectedAccount==null)
+                            {
+                              return Text('Select Account',style: Const.font_500_14(context,color: Color.fromRGBO(190, 190, 190, 1)),);
+                            }
                           else if(b.selectedAccount?.type=='UPI')
                           {
                             return Text(
@@ -135,6 +146,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         },
                       ),
                     )),
+
+
+
                     IconButton(onPressed: (){
                       showModalBottomSheet(
                           isScrollControlled: true,

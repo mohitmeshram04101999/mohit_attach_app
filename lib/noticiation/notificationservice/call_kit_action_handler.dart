@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:attach/api/callsApi.dart';
 import 'package:attach/api/local_db.dart';
+import 'package:attach/bd/bg_main.dart';
 import 'package:attach/modles/custom_calls_info.dart';
 import 'package:attach/modles/otp_responce.dart';
+import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/providers/audio%20call%20provider.dart';
 import 'package:attach/providers/videoCallProvider.dart';
@@ -14,7 +17,7 @@ import 'package:flutter_callkit_incoming/entities/call_event.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-callKitActionhanlde(CallEvent? event,{ServiceInstance? service}) {
+callKitActionhanlde(CallEvent? event,{required ServiceInstance? serviceInstance}) {
   Logger().i(event?.body);
   Logger().i("context check = ${navigatorKey.currentContext == null}");
 
@@ -23,14 +26,14 @@ callKitActionhanlde(CallEvent? event,{ServiceInstance? service}) {
 
   //
   if (chanelName == 'VIDEO_CALL_CHANNEL') {
-    _callKitEventHandlerForVideoCall(event,service: service);
+    _callKitEventHandlerForVideoCall(event,serviceInstance: serviceInstance);
   }
   if (chanelName == 'AUDIO_CALL_CHANNEL') {
-    _callKitEventHandlerForAudioCall(event,service: service);
+    _callKitEventHandlerForAudioCall(event,serviceInstance: serviceInstance);
   }
 }
 
-_callKitEventHandlerForVideoCall(CallEvent? event,{ServiceInstance? service}) async {
+_callKitEventHandlerForVideoCall(CallEvent? event,{required ServiceInstance? serviceInstance}) async {
   Map data = event?.body;
 
 
@@ -42,8 +45,11 @@ _callKitEventHandlerForVideoCall(CallEvent? event,{ServiceInstance? service}) as
     case Event.actionCallAccept:
       Map data = event?.body['extra'];
 
+      print("Call accepted now");
       CallsApi().updateCall(callId: data['callId'], status: "ANSWERED");
+      print("call Updated");
       var user = User.fromJson(jsonDecode(data['user']));
+      print("user variable init");
 
       var d = MyCallEvent(
         eventName: CustomCallEventName.videoCallPicked,
@@ -51,12 +57,17 @@ _callKitEventHandlerForVideoCall(CallEvent? event,{ServiceInstance? service}) as
         user: user,
         threadId: data['threadId'],
       );
+
+      print("created call event");
        await DB().saveCallEvent(d);
 
+       log("saved call event ${d.toJson()}");
 
-      if(service!=null) {
-        service.invoke(CustomCallEventName.videoCallPicked,d.toJson());
-      }
+
+
+      serviceInstance?.invoke(CustomCallEventName.videoCallPicked,d.toJson());
+
+
 
       break;
 
@@ -102,6 +113,8 @@ _callKitEventHandlerForVideoCall(CallEvent? event,{ServiceInstance? service}) as
           status: "MISSED",
           callEndedById: DB.curruntUser?.id,
         );
+
+        service.invoke("timeOut");
       }
 
       break;
@@ -115,7 +128,7 @@ _callKitEventHandlerForVideoCall(CallEvent? event,{ServiceInstance? service}) as
   }
 }
 
-_callKitEventHandlerForAudioCall(CallEvent? event,{ServiceInstance? service}) async {
+_callKitEventHandlerForAudioCall(CallEvent? event,{ServiceInstance? serviceInstance}) async {
   Map data = event?.body;
 
   switch (event?.event) {
@@ -134,10 +147,7 @@ _callKitEventHandlerForAudioCall(CallEvent? event,{ServiceInstance? service}) as
       );
       await DB().saveCallEvent(d);
 
-
-      if(service!=null) {
-        service.invoke(CustomCallEventName.audioCallPicked,d.toJson());
-      }
+      serviceInstance?.invoke(CustomCallEventName.audioCallPicked,d.toJson());
 
       break;
 
@@ -187,6 +197,8 @@ _callKitEventHandlerForAudioCall(CallEvent? event,{ServiceInstance? service}) as
           status: "MISSED",
           callEndedById: DB.curruntUser?.id,
         );
+
+        service.invoke("timeOut");
       }
 
       break;

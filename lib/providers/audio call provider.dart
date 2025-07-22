@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:attach/api/apiPath.dart';
@@ -46,9 +47,43 @@ class AudioCallProvider with ChangeNotifier{
   bool get isMicMuted => _isMicMuted;
 
 
-  updateOutGoingCallScreen(bool b) => _onOutGoingScreen=b;
+  updateOutGoingCallScreen(bool b) {
 
-  updateOnCallScreen(bool b) => _onCallScreen=b;
+    if(b)
+      {
+        log("Entero on Otgoing Call Screen");
+      }
+    else
+    {
+      log("Leave on Otgoing Call Screen");
+    }
+
+    _onOutGoingScreen=b;
+  }
+
+  updateOnCallScreen(bool b) {
+    if(b)
+    {
+      log("Entero on Call Screen");
+    }
+    else
+    {
+      log("Leave on Call Screen");
+    }
+    _onCallScreen=b;
+  }
+
+
+  destroyEngine({bool? release = false}) async
+  {
+
+    await _engine?.leaveChannel();
+    await _engine?.stopPreview();
+    await _engine?.release();
+    _engine = null;
+
+
+  }
 
 
 
@@ -165,7 +200,7 @@ class AudioCallProvider with ChangeNotifier{
 
     setChannels(u: u, channel: threadId , callId: callId);
 
-    ReplaceTo(navigatorKey.currentContext!, child:(p0, p1) => AudioCallScreen(user: u, threadId: threadId, callId: callId),);
+    RoutTo(navigatorKey.currentContext!, child:(p0, p1) => AudioCallScreen(user: u, threadId: threadId, callId: callId),);
 
   }
 
@@ -237,6 +272,19 @@ class AudioCallProvider with ChangeNotifier{
       UserOfflineReasonType reason) {
     debugPrint("remote user $remoteUid left channel");
     _remoteUid = null;
+   if(navigatorKey.currentContext!=null)
+     {
+       if(_onCallScreen)
+       {
+         _onCallScreen  = false;
+         navigatorKey.currentState?.pop();
+       }
+       if(_onOutGoingScreen)
+       {
+         _onOutGoingScreen = false;
+         navigatorKey.currentState?.pop();
+       }
+     }
     notifyListeners();
 
   }

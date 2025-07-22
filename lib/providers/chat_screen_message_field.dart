@@ -53,20 +53,8 @@ class _ChatScreenMessageFieldState extends State<ChatScreenMessageField> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
 
-                    IconButton(
-                        onPressed: (){
-                         // if(widget.emoji)
-                         //   {
-                         //     showModalBottomSheet(context: context, builder: (context) =>
-                         //         CustomEmojiPicker()
-                         //     );
-                         //   }
-                         // else
-                         //   {
-                         //     Navigator.pop(context);
-                         //   }
-                        },
-                        icon: Center(child: Image.asset("assets/icons/inboxpageicons/mingcute_emoji-line.png",width: SC.from_width(25),))),
+
+                    SizedBox(width: SC.from_width(20),),
 
                     Expanded(
                       child: TextFormField(
@@ -76,7 +64,7 @@ class _ChatScreenMessageFieldState extends State<ChatScreenMessageField> {
                           p.startTyping();
 
                           _timer?.cancel();
-                          _timer = Timer(Duration(milliseconds: 300), (){
+                          _timer = Timer(Duration(milliseconds: 800), (){
                             p.stopTyping();
                           });
 

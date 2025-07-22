@@ -1,4 +1,5 @@
 
+import 'package:attach/bd/bd_call_event_handler.dart';
 import 'package:attach/bd/bg_main.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/firebase_options.dart';
@@ -6,10 +7,12 @@ import 'package:attach/firebase_options.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/noticiation/notificationservice/backgoundNotification%20handler.dart';
+import 'package:attach/providers/appLifesycalProvider.dart';
 import 'package:attach/providers/audio%20call%20provider.dart';
 
 import 'package:attach/providers/auth_provider.dart';
 import 'package:attach/providers/bank_account_provider.dart';
+import 'package:attach/providers/become_listener_provider.dart';
 import 'package:attach/providers/call_history_provider.dart';
 import 'package:attach/providers/chatListProvider.dart';
 import 'package:attach/providers/chatProvider.dart';
@@ -33,9 +36,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
 
 
@@ -51,9 +56,23 @@ Future<void> waitForContext() async {
 
 
 
+
+
+offScreenShot() async
+{
+  final  noScreenshot = NoScreenshot.instance;
+  var result =  await noScreenshot.screenshotOff();
+  print("this is result $result");
+
+}
+
+
+
 void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
 
+  await offScreenShot();
+  
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform
   );
@@ -70,6 +89,9 @@ void main() async {
 
 
   const callChannel = MethodChannel('com.attachchat.app/call');
+
+
+
 
   callChannel.setMethodCallHandler((call) async {
     if (call.method == "showCallScreen") {
@@ -106,6 +128,8 @@ void main() async {
   ReceivedAction? initialAction =
   await AwesomeNotifications().getInitialNotificationAction();
 
+  await addBGListener();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => AudioCallProvider(),),
@@ -125,6 +149,8 @@ void main() async {
       ChangeNotifierProvider(create: (context) => SelfStoryProvider(),),
       ChangeNotifierProvider(create: (context) => CallHistoryProvider(),),
       ChangeNotifierProvider(create: (context) => NotificationProvider(),),
+      ChangeNotifierProvider(create: (context) => BecomeListenerProvider(),),
+      ChangeNotifierProvider(create: (context) => AppLifeCycleProvider(),),
     ],
       child:  MyApp(action: initialAction)));
 }
@@ -238,7 +264,7 @@ class MyApp extends StatelessWidget {
           color: Colors.white
         ),
 
-        tabBarTheme: TabBarTheme(
+        tabBarTheme: TabBarThemeData(
           unselectedLabelColor: Color.fromRGBO(58, 61, 64, 1),
           labelColor: Colors.white,
 

@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:http/http.dart' as http;
 
 class MyHelper
 {
@@ -113,7 +116,36 @@ class MyHelper
 
 
 
+   String? handleResponse(BuildContext context,http.Response response) {
+    switch(response.statusCode){
+      case 201:
+        return jsonDecode(response.body)['media'];
+      case 400:
+        MyHelper.snakeBar(context,title: 'Bad Request',message: '${jsonDecode(response.body)['message']}',type: SnakeBarType.error);
+        break;
+
+      case 403:
+        break;
+
+      case 401:
+        MyHelper.tokenExp(context);
+        break;
+
+      case 500:
+        MyHelper.serverError(context, response.body);
+        break;
+
+      default:
+        MyHelper.serverError(context, '${response.statusCode}\n${response.body}',title: 'Exception');
+        break;
+    }
+    return null;
+  }
+
+
+
 }
+
 
 
 
