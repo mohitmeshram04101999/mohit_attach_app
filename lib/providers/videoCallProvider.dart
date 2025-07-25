@@ -235,22 +235,30 @@ class VideoCallProvider with ChangeNotifier {
 
   void _onUserJoined(RtcConnection connection, int remotId, int elapsed)
   {
+
     print("User join ");
     _remoteUid =remotId;
-    // _startRecord(navigatorKey.currentContext!);
+    print("Id is ${_remoteUid}");
+    _startRecord(navigatorKey.currentContext!);
+    print("Id is ${_remoteUid}");
     notifyListeners();
   }
 
   void _onUserOffline(RtcConnection connection, int remoteUid,
       UserOfflineReasonType reason) {
-    // _stopRecord(navigatorKey.currentContext!);
+    print("remote user $remoteUid left channel");
+    _stopRecord(navigatorKey.currentContext!,curruntCallId: _callId??'');
+    print("object");
     if(_isOnCallScreen)
       {
+        print("closintg the call screen");
         _isOnCallScreen = false;
         Navigator.pop(navigatorKey.currentContext!);
+
       }
     if(_onOutGoingCallScreen)
       {
+        print("closing the on call screen");
         _onOutGoingCallScreen = false;
         Navigator.pop(navigatorKey.currentContext!);
       }
@@ -480,7 +488,7 @@ class VideoCallProvider with ChangeNotifier {
 
   _acquire(BuildContext context) async
   {
-    print("this is for acur ");
+    print("this is for acur  ${_channel} ${_remoteUid}");
     if(_channel!=null&&_remoteUid!=null)
       {
         var resp = await CallRecordApi().acquire(_channel!, _remoteUid!);
@@ -542,7 +550,7 @@ class VideoCallProvider with ChangeNotifier {
     {
       case 200:
         var d = jsonDecode(resp.body);
-        _recordingId = d['token']['sid'];
+        _recordingId = d['data']['sid'];
         break;
 
       case 400:
@@ -567,7 +575,9 @@ class VideoCallProvider with ChangeNotifier {
     }
   }
   
-  _stopRecord(BuildContext context) async
+  _stopRecord(BuildContext context,{
+    required String curruntCallId,
+  }) async
   {
     log("  \n $_channel \n $_remoteUid \n$_resourceId \n$_recordingId");
     if(_recordingId==null||_channel==null||_remoteUid==null||_recordingId==null)
@@ -577,11 +587,24 @@ class VideoCallProvider with ChangeNotifier {
 
 
     var resp = await CallRecordApi().stopRecord(resourceId: _resourceId!, sid: _recordingId!, channel: _channel!, uid: _remoteUid!);
+
     switch (resp.statusCode)
     {
       case 200:
+
         _recordingId = null;
         _resourceId = null;
+
+        String?  recordingUrl = jsonDecode(resp.body)['data']['recordingUrl'];
+
+        var respdfd = await CallsApi().updateCall(
+            callId: curruntCallId, status: "COMPLETE",recordingUrl:recordingUrl);
+
+
+
+
+
+
         break;
 
       case 400:

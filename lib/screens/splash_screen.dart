@@ -1,4 +1,6 @@
+import 'package:attach/bd/bd_call_event_handler.dart';
 import 'package:attach/noticiation/notificationService.dart';
+import 'package:attach/providers/my_hleper.dart';
 import 'package:attach/providers/profileProvider.dart';
 import 'package:attach/providers/videoCallProvider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -29,14 +31,26 @@ class _SplashScreenState extends State<SplashScreen> {
   start() async
   {
 
+    if(widget.action==null) {
+      MyHelper.snakeBar(context, title: "init action null h ", message: "We have receved action ");
+    }
+    else
+      {
+        MyHelper.snakeBar(context, title: "initifl action nall nahi h ", message: "oooooooooooo yeeeeeee");
+      }
+
+
+
      await NotificationService().getNotificationPermission();
      await getPermmission();
     Provider.of<ProfileProvider>(context,listen: false).checkUserLogIn(context,widget.action);
 
-
      final provider = Provider.of<VideoCallProvider>(context, listen: false);
      await provider.getPermmission();
+
+     await addBGListener();
   }
+
 
 
   getPermmission()async{

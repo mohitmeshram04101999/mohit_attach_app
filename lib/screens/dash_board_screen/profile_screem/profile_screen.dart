@@ -77,8 +77,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subTitle: "Update your personal details.",
               onTap: ()async{
 
-                await  RoutTo(context, child: (p0, p1) => EditProfile(),);
-
+                await  RoutTo(context,child: (p0, p1) => EditProfile());
+                await Future.delayed(Duration(microseconds: 300));
                 ProfileProvider p = Provider.of<ProfileProvider>(context,listen: false);
                 p.clearEdit(context);
               },

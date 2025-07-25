@@ -39,6 +39,7 @@ class ChatProvider with ChangeNotifier {
   final TextEditingController _textEditingController = TextEditingController();
   bool _loading = true;
   String? _sessionId;
+  bool _onChatScreen = false;
 
 
   List<Message> _messages = [];
@@ -52,6 +53,13 @@ class ChatProvider with ChangeNotifier {
   bool get sessionExpired => _sessionExpired;
   bool get loading => _loading;
   String? get sessionId => _sessionId;
+  bool get  onChatScreen => _onChatScreen;
+
+
+  setOnChatScreen(bool b){
+    _onChatScreen = b;
+
+  }
 
   selectMessage(Message m) {
     print("selectd");
@@ -131,6 +139,9 @@ class ChatProvider with ChangeNotifier {
   }
 
   startChat(String? threadId) async{
+    stopChat();
+
+
     _threadId = threadId;
 
     _socket?.on("threadMessages", _threadMessages);
@@ -219,7 +230,6 @@ class ChatProvider with ChangeNotifier {
 
       Logger().i(data);
       var _d = LoadChatResponce.fromJson(data);
-      Logger().e("lajka this is mesage ${_d.messages?.first.status}");
       _messages = _d.messages ?? [];
       notifyListeners();
     }
@@ -286,10 +296,14 @@ class ChatProvider with ChangeNotifier {
   _threadMessages(dynamic data) {
     Map d = data;
     Logger().i("this is load tgh --- \n $d \n ---");
+
+    print("Chat receved");
+    Logger().t(d);
     var _d = LoadChatResponce.fromJson(data);
     _messages = _d.messages ?? [];
     _user = _d.user;
     notifyListeners();
+
   }
 
   stopChat() {

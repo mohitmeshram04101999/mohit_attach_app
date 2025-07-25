@@ -6,9 +6,11 @@ import 'package:attach/componant/laguage_grid_tile.dart';
 import 'package:attach/componant/profile_aVTAR.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/all_language_responce_model.dart';
+import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/providers/language_provider.dart';
 import 'package:attach/providers/profileProvider.dart';
+import 'package:attach/screens/profile_sub_screens/select_avtar_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
           (context, p, child) => WillPopScope(
             onWillPop: () async {
               return true;
-            },
+              },
             child: Scaffold(
               appBar: AppBar(title: Text('Edit Profile')),
 
@@ -55,10 +57,13 @@ class _EditProfileState extends State<EditProfile> {
                   Center(
                     child: GestureDetector(
                       onTap: () {
-                        p.selectProfileImage(context);
+                        // p.selectProfileImage(context);
+
+                        showModalBottomSheet(context: context, builder: (context) =>_SelectProfileDialog());
+
                       },
                       child: ProfileAvtar(
-                        image: p.selectedProfile ?? p.user?.image,
+                        image: p.selectedProfile ?? p.selectedAvtar ?? p.user?.image,
                         imageType:
                             (p.selectedProfile != null)
                                 ? ImageType.file
@@ -80,6 +85,22 @@ class _EditProfileState extends State<EditProfile> {
                   CustomTextField(
                     controller: p.nameController,
                     label: 'Full Name',
+                  ),
+                  SizedBox(height: SC.from_width(20)),
+
+                  //
+                  CustomTextField(
+                    controller: p.phoneController,
+                    label: 'Phone Number',
+                    readOnly: true,
+                  ),
+                  SizedBox(height: SC.from_width(20)),
+
+                  //
+                  CustomTextField(
+                    controller: p.mailController,
+                    label: 'Email',
+
                   ),
                   SizedBox(height: SC.from_width(20)),
 
@@ -233,3 +254,110 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 }
+
+
+class _SelectProfileDialog extends StatelessWidget {
+  const _SelectProfileDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+
+      child: GridView(
+        shrinkWrap: true,
+        padding: EdgeInsets.only(top: SC.from_width(20),bottom: SC.from_width(10)),
+        primary: false,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
+          mainAxisExtent: SC.from_width(80)
+        ),
+        children: [
+          
+          
+          //Image
+          Center(
+            child: Column(
+              children: [
+
+                //
+                SizedBox(
+                  height: SC.from_width(50),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 1,color: Const.yellow),
+                        borderRadius: BorderRadius.circular(5)
+                      ),
+
+
+                      child: InkWell(
+                        onTap: (){
+                          Provider.of<ProfileProvider>(context,listen: false).selectProfileImage(context);
+                          Navigator.pop(context);
+                        },
+                        borderRadius: BorderRadius.circular(5),
+                        child:Padding(
+                          padding:  EdgeInsets.all(SC.from_width(12)),
+                          child: Image.asset("assets/newIcons/img_4.png",color: Colors.white,),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: SC.from_width(5),),
+                //
+                Text("Image",style: Const.font_400_14(context),)
+                
+              ],
+            ),
+          ),
+
+
+          Center(
+            child: Column(
+              children: [
+
+                //
+                SizedBox(
+                  height: SC.from_width(50),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Ink(
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1,color: Const.yellow),
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+
+
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.pop(context);
+                          RoutTo(context, child: (p0, p1) => SelectAvtarScreen(),);
+
+
+                        },
+                        borderRadius: BorderRadius.circular(5),
+                        child:Padding(
+                          padding:  EdgeInsets.all(SC.from_width(12)),
+                          child: Image.asset("assets/newIcons/img_4.png",color: Colors.white,),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: SC.from_width(5),),
+                //
+                Text("Avatar",style: Const.font_400_14(context),)
+
+              ],
+            ),
+          )
+
+        ],
+      ),
+    );
+  }
+}
+

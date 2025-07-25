@@ -152,16 +152,14 @@ class AuthProvider with ChangeNotifier{
 
         if(logInResponce.profileComplete==true)
           {
-             await Provider.of<ProfileProvider>(context,listen: false).setAndSaveUser(logInResponce.data!);
-             if(  await Provider.of<ProfileProvider>(context,listen: false).user?.online!=true)
-               {
-                 await Provider.of<ProfileProvider>(context,listen: false).goOnlineOrOffline(context);
-               }
+             var pro =  await Provider.of<ProfileProvider>(context,listen: false);
+             await pro.setAndSaveUser(logInResponce.data!);
 
-             if(await service.isRunning()!=true&&Provider.of<ProfileProvider>(context,listen: false).user?.userType==UserType.listener)
-               {
 
-               }
+             await  pro.getUser(context);
+
+             print("Checking for listener ${pro.user?.userType}");
+
              clear();
             ReplaceAll(context, child: (p0, p1) => DashBoardScreen(),);
           }

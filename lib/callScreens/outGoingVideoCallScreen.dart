@@ -76,6 +76,12 @@ class _OutgoingVideoCallScreenState extends State<OutgoingVideoCallScreen> {
                         child: Image.network(
                           widget.user.image??'',
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace){
+
+                            return Text("Image not found");
+
+                             return widget.user.gender=="FEMALE"?Image.asset("assets/avtars/femaleFix.jpg",fit: BoxFit.cover,):Image.asset("assets/avtars/maleFix.jpg",fit: BoxFit.cover,);
+                          },
                         ),
                       ),
                     ),
@@ -92,7 +98,16 @@ class _OutgoingVideoCallScreenState extends State<OutgoingVideoCallScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                               ),
-                              child: Image.network(widget.user.image??'',fit: BoxFit.cover,)),
+                              child: Image.network(widget.user.image??'',fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                if(widget.user.gender=="FEMALE")
+                                  {
+                                    return Image.asset("assets/avtars/femaleFix.jpg",fit: BoxFit.cover,);
+                                  }
+
+                                return Image.asset("assets/avtars/maleFix.jpg",fit: BoxFit.cover,);
+                                },
+                              )),
                           SizedBox(height: SC.from_width(10),),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),

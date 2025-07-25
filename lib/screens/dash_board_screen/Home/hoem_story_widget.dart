@@ -55,25 +55,14 @@ class HomeStoryWidget extends StatelessWidget {
                                   data?.listener?.image??'',
                                   height: double.infinity,
                                   width: double.infinity,
+                                  errorBuilder: (context, error, stackTrace)=>Container(
+                                    color: Color.fromRGBO(97, 97, 97, .58),
+                                  ),
                                   fit: BoxFit.cover,),
                               )))
                     ],
                     showLabels: false,
 
-
-                    backgroundImage: NetworkImage("https://leadkart.in-maa-1.linodeobjects.com/ATTACH_IMAGE/IMAGE/1749109955747_cb6391475579bde22aedc732f293cff604f2670a.png",),
-
-
-
-                    // ranges: [
-                    //   GaugeRange(
-                    //     startValue: 0,
-                    //     endValue: 99,
-                    //     color: Const.yellow,
-                    //     endWidth: 3,
-                    //     startWidth: 3,
-                    //   ),
-                    // ],
 
                     ranges: List.generate(data?.stories?.length??0, (i) {
 
@@ -105,7 +94,9 @@ class HomeStoryWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
                 onTap: ()
                 {
-                  RoutTo(context, child: (p0, p1) => StoryViewPage(data: {'':''},storyId: data?.listener?.id,));
+                  RoutTo(context, child: (p0, p1) => StoryViewPage(
+
+                    data: {'':''},storyId: data?.listener?.id,));
                 },
                 child: Container(
                   // color: Colors.red,

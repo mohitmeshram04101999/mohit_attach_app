@@ -32,8 +32,11 @@ class ProfileProvider with ChangeNotifier {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _mail = TextEditingController();
   final TextEditingController _bio = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
+  final TextEditingController _age = TextEditingController();
   String? _gender;
   User? _user;
+  String? _selectedAvtar;
   String? _selectedProfileImage;
 
   String? get gender => _gender;
@@ -42,17 +45,31 @@ class ProfileProvider with ChangeNotifier {
   TextEditingController get mailController => _mail;
   TextEditingController get bioController => _bio;
   User? get user => _user;
+  TextEditingController get phoneController => _phone;
+  String? get selectedAvtar => _selectedAvtar;
+  TextEditingController get ageController => _age;
 
   setUser(User user) {
     _user = user;
     notifyListeners();
   }
 
+
+  setAvtar(String avtar)
+  {
+    _selectedProfileImage = null;
+    _selectedAvtar =  avtar;
+    notifyListeners();
+  }
+
   clearEdit(BuildContext context) {
     _selectedProfileImage = null;
+    _selectedAvtar = null;
     _mail.clear();
     _name.clear();
     _gender = null;
+    _phone.clear();
+    _bio.clear();
     Provider.of<LanguageProvider>(context, listen: false).clear();
     debugPrint("clear Done");
   }
@@ -62,6 +79,7 @@ class ProfileProvider with ChangeNotifier {
     _mail.text = _user!.email!;
     _gender = _user?.gender;
     _bio.text = _user?.bio ?? '';
+    _phone.text = _user?.phoneNumber ?? '';
     notifyListeners();
 
     var p = Provider.of<LanguageProvider>(context, listen: false);
@@ -98,13 +116,16 @@ class ProfileProvider with ChangeNotifier {
       case 200:
         var d = jsonDecode(resp.body);
         _user = User.fromJson(d['data']);
-        if(_user?.online==true&&user?.userType==UserType.listener)
+        if(user?.userType==UserType.listener)
           {
-            await initBgService();
-          }
-        else
-          {
-            service.invoke("stop");
+            if(_user?.online==true)
+            {
+              await initBgService();
+            }
+            else
+            {
+              service.invoke("stop");
+            }
           }
         break;
       case 400:
@@ -192,6 +213,7 @@ class ProfileProvider with ChangeNotifier {
     var result = await ImagePicker().pickImage(source: ImageSource.gallery);
     debugPrint("selected image ${result?.path} $d $v");
     if (result != null) {
+      _selectedAvtar = null;
       _selectedProfileImage = result.path;
       notifyListeners();
     }
@@ -222,6 +244,7 @@ class ProfileProvider with ChangeNotifier {
 
     var resp = await AuthApi().createProfile(
       mobileNumber: auth.phoneNumberController.text.trim(),
+      age: _age.text.trim(),
       fullName: _name.text.trim(),
       mail: _mail.text.trim(),
       gender: gender!,
@@ -439,6 +462,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   updateProfile(BuildContext context) async {
+
     if (_name.text.trim().isEmpty) {
       MyHelper.snakeBar(
         context,
@@ -453,13 +477,16 @@ class ProfileProvider with ChangeNotifier {
     var resp = await AuthApi().updateUser(
       user?.id ?? '',
       name: _name.text.trim(),
+
       bio: _bio.text.trim(),
       languages:
           lang.selectedLanguage.isEmpty
               ? null
               : lang.selectedLanguage.map((e) => e.id ?? '').toList(),
       gender: _gender,
+      email: _mail.text.trim(),
       profileImage: _selectedProfileImage,
+      avtarUrl: _selectedAvtar
     );
 
     print('this is responcse from update api ${resp.statusCode}');
@@ -474,6 +501,7 @@ class ProfileProvider with ChangeNotifier {
         await saveUser();
         notifyListeners();
         Navigator.of(context).pop();
+        await  Future.delayed(Duration(milliseconds: 300));
         clearEdit(context);
         break;
 

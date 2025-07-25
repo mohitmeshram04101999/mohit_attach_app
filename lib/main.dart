@@ -69,28 +69,32 @@ offScreenShot() async
 
 
 void main() async {
+  print("for main 1");
   await WidgetsFlutterBinding.ensureInitialized();
+  print("for main 2");
 
   await offScreenShot();
+  print("for main 3");
   
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform
   );
 
+  print("for main 4");
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-
+  print("for main 5");
 
 
 
 
   const callChannel = MethodChannel('com.attachchat.app/call');
 
-
+  print("for main 6");
 
 
   callChannel.setMethodCallHandler((call) async {
@@ -101,6 +105,7 @@ void main() async {
 
 
       // await waitForContext();
+
 
       // Navigate to your call screen
       navigatorKey.currentState?.push(
@@ -114,21 +119,27 @@ void main() async {
 
 
 
-
+  print("for main 7");
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
+
+
+  print("Getting init action ....");
+  ReceivedAction? initTaction  = await AwesomeNotifications().getInitialNotificationAction();
+
+  print("we get Init Action so this is this is $initTaction");
+
   //
-  AwesomeNotifications().setListeners(
-    onActionReceivedMethod: _actionHande,
-    onDismissActionReceivedMethod: _actionHande,
-  );
+
+  print("for main 8");
 
 
-  //
-  ReceivedAction? initialAction =
-  await AwesomeNotifications().getInitialNotificationAction();
 
-  await addBGListener();
+
+
+  print("for main 9");
+
+
 
   runApp(MultiProvider(
     providers: [
@@ -152,7 +163,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => BecomeListenerProvider(),),
       ChangeNotifierProvider(create: (context) => AppLifeCycleProvider(),),
     ],
-      child:  MyApp(action: initialAction)));
+      child:  MyApp(action: initTaction)));
 }
 
 class MyApp extends StatelessWidget {
@@ -169,6 +180,13 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
+
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child!,
+        );
+      },
 
       // routes: {
       //   '/incoming_call':(context)=>IncomingCallScreen(
@@ -449,73 +467,5 @@ class MyApp extends StatelessWidget {
 
 
 
-@pragma("vm:entry-point")
-Future<void> _actionHande(ReceivedAction action) async
-{
-  // Logger().i("Action perform ${action.toMap()}");
-  // Logger().i("Action NEW ACTION PRINT ${action}");
-  //
-  //
-  //
-  // if(action.payload!=null)
-  //   {
-  //
-  //     var message = RemoteMessage.fromMap(jsonDecode(action.payload?['data']??''));
-  //
-  //     Logger().i("user = ${message.data['user']}  \n call id = ${message.data['callId']} \n threadId = ${message.data['threadId']}");
-  //
-  //     var u = User.fromJson(jsonDecode(message.data['user']));
-  //
-  //     if(message.notification?.android?.channelId=="VIDEO_CALL_CHANNEL")
-  //       {
-  //         Logger().e("4");
-  //
-  //         if(message.data['status'] == 'INCOMING')
-  //           {
-  //             Logger().e("5");
-  //             switch (action.buttonKeyPressed)
-  //                 {
-  //
-  //                   case "Vidio_call_accept":
-  //                     Logger().e("6");
-  //                 RoutTo(navigatorKey.currentContext!, child: (p0, p1) => VideoCallScreen(
-  //                   user: u,
-  //                   callId: message.data["callId"],
-  //                   channelId: message.data['threadId'],
-  //                 ),);
-  //                     Logger().e("7");
-  //                 break;
-  //
-  //               case 'Vidio_call_decline':
-  //                 break ;
-  //
-  //               default:
-  //                 Logger().e("6");
-  //                 RoutTo(navigatorKey.currentContext!, child: (p0, p1) => IncomingCallScreen(
-  //                   user: u,
-  //                   callId: message.data["callId"],
-  //                   channerlId: message.data['threadId'],
-  //                 ),);
-  //                 Logger().e("7");
-  //                 break;
-  //
-  //
-  //                 }
-  //           }
-  //
-  //       }
-  //
-  //     Logger().i("${message.notification?.android?.channelId}");
-  //     // User u = User.fromJson(_data['user']);
-  //   }
-  //
-  //
-  //
-  //
-  //
-
-
-
-}
 
 

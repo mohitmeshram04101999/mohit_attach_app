@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:attach/noticiation/notification%20action%20handler.dart';
 import 'package:attach/noticiation/notificationservice/call_kit_action_handler.dart';
 import 'package:attach/noticiation/notificationservice/handel_audio_call.dart';
 import 'package:attach/noticiation/notificationservice/handle_video_call.dart';
@@ -28,11 +29,6 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class NotificationService{
 
-
-
-  final _messaging = FirebaseMessaging.instance;
-  final _notification = AwesomeNotifications();
-
   getNotificationPermission() async
   {
     // var  p = await Permission.notification.request();
@@ -51,13 +47,7 @@ class NotificationService{
    // var p2 = await FlutterCallkitIncoming.requestFullIntentPermission();
 
    Logger().t("statuseer of full Screen Permmision");
-    // var  p = await _messaging.requestPermission(
-    //   criticalAlert: true,
-    //   alert: true,
-    //   sound: true,
-    //   providesAppNotificationSettings: true,
-    //
-    // );
+
     String? s = await getToken();
     await initChannel();
     startListen();
@@ -93,69 +83,6 @@ class NotificationService{
 
 
 
-  // Future<String?> getToken() async {
-  //   try {
-  //     if (Platform.isAndroid) {
-  //       await FirebaseMessaging.instance.isSupported();
-  //     }
-  //
-  //     NotificationSettings settings = await FirebaseMessaging.instance.requestPermission();
-  //
-  //     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  //
-  //       int retryCount = 0;
-  //       const maxRetries = 3;
-  //
-  //       while (retryCount < maxRetries) {
-  //         try {
-  //           String? token = await FirebaseMessaging.instance.getToken();
-  //           if (token != null) {
-  //             print('FCM Token: $token');
-  //             return token;
-  //           } else {
-  //             throw Exception('Token is null');
-  //           }
-  //         } catch (e) {
-  //           retryCount++;
-  //           print('Attempt $retryCount failed: $e');
-  //           if (retryCount >= maxRetries) {
-  //             MyHelper.snakeBar(
-  //               navigatorKey.currentContext!,
-  //               title: 'Failed to get FCM token',
-  //               message: 'Please check your internet connection or Google Play Services.',
-  //               type: SnakeBarType.error,
-  //               duration: Duration(seconds: 5)
-  //             );
-  //             return null;
-  //           }
-  //           await Future.delayed(Duration(seconds: 2)); // Wait before retrying
-  //         }
-  //       }
-  //     } else {
-  //
-  //
-  //       MyHelper.snakeBar(
-  //         navigatorKey.currentContext!,
-  //         title: 'Notification Permission Denied',
-  //         message: 'Please allow notification permissions.',
-  //       );
-  //       return null;
-  //     }
-  //
-  //   } catch (e) {
-  //     print('Error getting FCM token: $e');
-  //     MyHelper.snakeBar(
-  //       navigatorKey.currentContext!,
-  //       title: 'Failed to get FCM token',
-  //       message: "$e",
-  //       type: SnakeBarType.error,
-  //     );
-  //     return null;
-  //   }
-  //   return null;
-  // }
-
-
   startListen()
  {
    FirebaseMessaging.onMessage.listen((message) {
@@ -166,13 +93,7 @@ class NotificationService{
 
    },);
 
-/*   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-     //TODO
-     Logger().i("App Opne From Fire base");
-     OpenDailogWithAnimation(navigatorKey.currentContext!, dailog: (animation, secondryAnimation) =>AlertDialog(
-       title: Text("Appp Opneby fire baser"),
-     ),);
-   });*/
+
  }
 
  initChannel() async
@@ -291,20 +212,16 @@ class NotificationService{
          )
        ],
        debug: true);
+   
+   
+   await AwesomeNotifications().setListeners(onActionReceivedMethod:notificationActionHandler);
 
 
-   // initCallKitListener();
  }
 
 
 
 
-
-  // void initCallKitListener() {
-  //   FlutterCallkitIncoming.onEvent.listen((event) {
-  //     callKitActionhanlde(event);
-  //   });
-  // }
 
 
  showNotification(RemoteMessage message,{bool fromBackGround =false}) async
@@ -326,6 +243,27 @@ class NotificationService{
    }
 
 
+     if(message.notification?.android?.channelId=="MESSAGE_CHANNEL")
+     {
+       await  AwesomeNotifications().createNotification(
+           content: NotificationContent(
+             id: 0,
+             channelKey: "MESSAGE_CHANNEL",
+             title: message.notification?.title??'',
+             body: message.notification?.body??'',
+             fullScreenIntent: true,
+             wakeUpScreen: true,
+             criticalAlert: false,
+             payload:{"Mene data bheja":"On thune reecve kyou nahi kiya"},
+             // category: NotificationCategory.Alarm,
+             notificationLayout: NotificationLayout.Default,
+             autoDismissible: true,
+
+           )
+       );
+     }
+
+
    if(message.notification?.android?.channelId=="NOTIFICATION_CHANNEL")
      {
 
@@ -339,10 +277,10 @@ class NotificationService{
              fullScreenIntent: true,
              wakeUpScreen: true,
              criticalAlert: false,
+             payload:{"Mene data bheja":"On thune reecve kyou nahi kiya"},
              // category: NotificationCategory.Alarm,
              notificationLayout: NotificationLayout.Default,
              autoDismissible: true,
-             locked: true,
 
            )
        );
@@ -359,7 +297,6 @@ class NotificationService{
              fullScreenIntent: true,
              wakeUpScreen: true,
              criticalAlert: true,
-
              // category: NotificationCategory.Alarm,
              notificationLayout: NotificationLayout.Default,
              autoDismissible: false,
@@ -367,23 +304,6 @@ class NotificationService{
            ),
        );
 
-
-
-       // AwesomeNotifications().createNotification(
-       //   content: NotificationContent(
-       //     id: 0,
-       //     channelKey: "TEST",
-       //     title: "Title",
-       //     body:"Body",
-       //     fullScreenIntent: true,
-       //     wakeUpScreen: true,
-       //     criticalAlert: true,
-       //     // category: NotificationCategory.Alarm,
-       //     notificationLayout: NotificationLayout.Default,
-       //     autoDismissible: false,
-       //     locked: true,
-       //   ),
-       // );
 
      }
 

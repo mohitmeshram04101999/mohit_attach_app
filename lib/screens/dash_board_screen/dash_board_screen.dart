@@ -63,9 +63,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
      }
    else
      {
+       print("app is not started");
        var call = await DB().getCallEvent();
+
+       print("get call $call");
        if(call!=null&&navigatorKey.currentContext!=null)
          {
+
+           print("call connect has been picked");
+
            if(call.eventName==CustomCallEventName.videoCallPicked)
              {
                RoutTo(navigatorKey.currentContext!, child: (p0, p1) => VideoCallScreen(user: call.user!, callId: call.callId!, channelId: call.threadId??''),);
@@ -77,6 +83,32 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
            appOpen = true;
          }
+
+
+       var profileProvider = Provider.of<ProfileProvider>(context,listen: false);
+
+       print("get user");
+
+       var lUser = profileProvider.user;
+
+
+       if(lUser?.userType==UserType.listener)
+         {
+           print("User is listener");
+           if(lUser?.online==true)
+             {
+               print("User is inline so init ing bg service");
+               await initBgService();
+             }
+           else
+             {
+               print("User is offline so go online");
+               await profileProvider.goOnlineOrOffline(context);
+             }
+         }
+
+
+
      }
 }
 
@@ -88,6 +120,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 initMyApp() async{
 
 
+   print("I am a init function");
 
    // -----------------------------------This is new code---------------------------------------
 
@@ -95,8 +128,7 @@ initMyApp() async{
 
   // if(profile.user?.userType==UserType.listener)
   //   {
-  //     await initBgService();
-  //     await addBGListener();
+
   //   }
 
   // -----------------------------------This is new code---------------------------------------
@@ -104,23 +136,22 @@ initMyApp() async{
   // -----------------------------------This is old code---------------------------------------
 
 
-  //     await initBgService();
-  //     await addBGListener();
+
 
   // -----------------------------------This is old code---------------------------------------
 
 
   // await addBGListener();
 
-  if(appOpen==false&&profile.user?.userType==UserType.listener)
-    {
-      await initBgService();
-    }
+
 
 
   var appLifeCycle = Provider.of<AppLifeCycleProvider>(navigatorKey.currentContext!,listen: false);
 
+  print("init ing app life cycle");
+
    await appLifeCycle.init();
+   print("app Life cycle ");
 
   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     checkIfHaseAction();
@@ -136,8 +167,13 @@ initMyApp() async{
  @override
   void initState() {
     // TODO: implement initState
+
+
     super.initState();
+    print("I am a dashboard screen");
+
     Provider.of<Socket_Provider>(context,listen: false).connectSocket();
+    print("I am a dashboard screen");
     // Provider.of<ChatListProvider>(context,listen: false).getContact();
     initMyApp();
  }

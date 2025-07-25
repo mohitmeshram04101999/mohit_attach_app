@@ -70,7 +70,7 @@
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleInstance"
-            android:showWhenLocked="true"
+            android:showWhenLocked="false"
             android:taskAffinity=""
             android:theme="@style/LaunchTheme"
             android:turnScreenOn="true"

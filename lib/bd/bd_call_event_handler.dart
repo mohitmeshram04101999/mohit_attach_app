@@ -13,6 +13,7 @@ import 'package:attach/providers/videoCallProvider.dart';
 import 'package:attach/screens/dash_board_screen/inbox/tabs/videoCallScreen.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
 
 
 
@@ -22,6 +23,8 @@ import 'package:provider/provider.dart';
 
 
 addBGListener()async{
+
+  Logger().i(" setting addBGListener");
 
 
  FlutterBackgroundService().on(CustomCallEventName.videoCallPicked).listen((event)async{

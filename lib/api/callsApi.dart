@@ -43,6 +43,8 @@ class CallsApi
     required String callId,
     required String status,
     String? callEndedById,
+    String? recordingUrl,
+
   }) async
   {
 
@@ -55,7 +57,7 @@ class CallsApi
       "status":status, // "MISSED", "REJECTED", "ANSWERED", "BUSY","COMPLETE"
       "answered":status=="ANSWERED",  // true or false
       "endTime":DateTime.now().toIso8601String(),
-      "recordingUrl":"",
+      "recordingUrl":recordingUrl,
       'callEndedById':callEndedById
     };
 

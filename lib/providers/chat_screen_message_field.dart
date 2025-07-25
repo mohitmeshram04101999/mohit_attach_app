@@ -74,6 +74,9 @@ class _ChatScreenMessageFieldState extends State<ChatScreenMessageField> {
                         style: Const.font_400_16(context,size: SC.from_width(14),color: Colors.black),
                         maxLines: 5,
                         minLines: 1,
+                        inputFormatters: [
+
+                        ],
 
                         decoration: InputDecoration(
                           fillColor: Colors.white,

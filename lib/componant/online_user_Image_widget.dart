@@ -1,3 +1,4 @@
+import 'package:attach/api/local_db.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,8 @@ class OnlineUserImageWidget extends StatelessWidget {
   final bool online;
   final bool busy;
   final bool asset;
-  const OnlineUserImageWidget({this.busy = false,this.asset = false,this.online= true,required this.image,super.key});
+  final String? gender;
+  const OnlineUserImageWidget({this.gender,this.busy = false,this.asset = false,this.online= true,required this.image,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,9 @@ class OnlineUserImageWidget extends StatelessWidget {
               image,
               height: double.infinity,
               width: double.infinity,
-              errorBuilder: (context, error, stackTrace) => Icon(Icons.person),
+              errorBuilder: (context, error, stackTrace)=>Container(
+                color: Color.fromRGBO(97, 97, 97, .58),
+              ),
               fit: BoxFit.cover,),
           ),
 

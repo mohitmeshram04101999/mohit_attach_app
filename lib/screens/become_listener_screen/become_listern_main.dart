@@ -4,6 +4,7 @@ import 'package:attach/providers/become_listener_provider.dart';
 import 'package:attach/screens/become_listener_screen/tabs/become_listener_tab_three.dart';
 import 'package:attach/screens/become_listener_screen/tabs/become_listener_tab_two.dart';
 import 'package:attach/screens/become_listener_screen/tabs/become_listener_tap_one.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -65,7 +66,8 @@ class _BecomeListenerMainState extends State<BecomeListenerMain> {
                   children: [
 
 
-                    Text('${p.questionList.length}'),
+                    if(kDebugMode)
+                      Text('${p.questionList.length}'),
 
                     for(int i=0;i<p.totalPage;i++)
                       Row(

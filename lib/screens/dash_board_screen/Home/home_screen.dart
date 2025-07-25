@@ -91,112 +91,126 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
         body: Consumer<HomeProvider>(
-          builder: (context, p, child) => ListView(
+          builder: (context, p, child){
+
+            if(p.data==null)
+              {
+                return Center(child: CircularProgressIndicator(),);
+              }
+
+
+            return  ListView(
 
 
 
-            physics: BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
 
-            padding: EdgeInsets.only(
-                top: SC.from_width(20)
-            ),
-            children: [
+              padding: EdgeInsets.only(
+                  top: SC.from_width(20)
+              ),
+              children: [
 
-              if(kDebugMode)
-                Column(
-                  children: [
-                    Text("${p.data}"),
-                    Text("${p.data?.homeBanner?.length}"),
-                    Text("${p.data?.stories?.length}"),
-                    Consumer<Socket_Provider>(builder: (context, value, child) => Text("${value}"),)
-                  ],
-                ),
-
-              //image Slider
-              CarouselSlider(
-                  items: [
-                    
-
-
-                    for(int i =0;i<(p.data?.homeBanner?.length??0);i++)
-                      Container(
-                          clipBehavior: Clip.hardEdge,
-                          margin: EdgeInsets.symmetric(horizontal: 14),
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: Image.network("${p.data?.homeBanner?[i]}",fit: BoxFit.cover,))
-
-                  ],
-                  options: CarouselOptions(
-                      height: SC.from_width(101),
-                      viewportFraction: 1,
-                    enableInfiniteScroll: false
-                  )),
-
-
-
-              SizedBox(height: SC.from_width(18),),
-
-
-              SingleChildScrollView(
-                primary: false,
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: Row(
+                if(kDebugMode)
+                  Column(
                     children: [
-                      for(StoryModel data in p.data?.stories??[])
-                        Padding(
-                            padding: EdgeInsets.only(right: SC.from_width(9)),
-                            child: HomeStoryWidget(data:data,))
-
+                      Text("${p.data}"),
+                      Text("${p.data?.homeBanner?.length}"),
+                      Text("${p.data?.stories?.length}"),
+                      Consumer<Socket_Provider>(builder: (context, value, child) => Text("${value}"),)
                     ],
                   ),
+
+                //image Slider
+                if(p.data?.homeBanner==null||p.data?.homeBanner?.length==0)...[]
+                else...[
+                  CarouselSlider(
+                      items: [
+
+
+
+                        for(int i =0;i<(p.data?.homeBanner?.length??0);i++)
+                          Container(
+                              clipBehavior: Clip.hardEdge,
+                              margin: EdgeInsets.symmetric(horizontal: 14),
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: Image.network("${p.data?.homeBanner?[i]}",fit: BoxFit.cover,))
+
+                      ],
+                      options: CarouselOptions(
+                          height: SC.from_width(101),
+                          viewportFraction: 1,
+                          enableInfiniteScroll: false
+                      )),
+
+                  SizedBox(height: SC.from_width(18),),
+                ],
+
+
+
+
+
+
+                SingleChildScrollView(
+                  primary: false,
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: Row(
+                      children: [
+                        for(StoryModel data in p.data?.stories??[])
+                          Padding(
+                              padding: EdgeInsets.only(right: SC.from_width(9)),
+                              child: HomeStoryWidget(data:data,))
+
+                      ],
+                    ),
+                  ),
                 ),
-              ),
 
-              // SizedBox(height: SC.from_width(10),),
-
-
-
-              SizedBox(height: SC.from_width(10),),
+                // SizedBox(height: SC.from_width(10),),
 
 
 
-              for(HomeListener l in p.data?.listeners??[])
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: CustomShimmer(loading: false,child:
-                  OnlineUserWidget(
-                    key: ValueKey(l.id),
-                    onFollow: (){
-                      Provider.of<HomeProvider>(context,listen: false).follow(context, l);
-                    },
-                    listener: l,
-                  )),
-                ),
+                SizedBox(height: SC.from_width(10),),
 
 
 
-              //
-              // Container(
-              //   height: SC.from_width(48),
-              //   margin: EdgeInsets.symmetric(horizontal: 14,vertical: SC.from_width(10)),
-              //   child: CustomActionButton(
-              //     lable: 'View All',
-              //     action: (){
-              //
-              //   },),
-              // ),
-              
-              Center(child: OutlinedButton(onPressed: (){
-                RoutTo(context, child: (p0, p1) =>ListerFilterScreen(),);
-              }, child: Text("View All")))
+                for(HomeListener l in p.data?.listeners??[])
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: CustomShimmer(loading: false,child:
+                    OnlineUserWidget(
+                      key: ValueKey(l.id),
+                      onFollow: (){
+                        Provider.of<HomeProvider>(context,listen: false).follow(context, l);
+                      },
+                      listener: l,
+                    )),
+                  ),
 
-            ],
-          ),
+
+
+                //
+                // Container(
+                //   height: SC.from_width(48),
+                //   margin: EdgeInsets.symmetric(horizontal: 14,vertical: SC.from_width(10)),
+                //   child: CustomActionButton(
+                //     lable: 'View All',
+                //     action: (){
+                //
+                //   },),
+                // ),
+
+                Center(child: OutlinedButton(onPressed: (){
+                  RoutTo(context, child: (p0, p1) =>ListerFilterScreen(),);
+                }, child: Text("View All")))
+
+              ],
+            );
+          },
         ),
       ),
     );

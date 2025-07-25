@@ -39,8 +39,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-
+    var p =  Provider.of<ChatProvider>(context,listen: false);
+    p.setOnChatScreen(true);
   }
 
 
@@ -58,6 +58,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    var p =  Provider.of<ChatProvider>(context,listen: false);
+    p.setOnChatScreen(false);
     // onScreenShot();
   }
 
@@ -70,6 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, p, child) {
         return WillPopScope(
           onWillPop: () async {
+            p.setOnChatScreen(false);
             p.cleaProvider();
             p.stopChat();
             return true;
@@ -101,6 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: OnlineUserImageWidget(
                               online: false,
                               image:
+
                                   p.user?.image ??
                                   widget.contact?.user?.image ??
                                   '',
@@ -211,6 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                   ),
+
                 SizedBox(width: SC.from_width(5)),
               ],
             ),
@@ -305,6 +310,7 @@ class _SafeConversationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.zero,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -316,18 +322,23 @@ class _SafeConversationCard extends StatelessWidget {
              Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.shield, color: Colors.green, size: 24),
+                Icon(Icons.shield, color: Colors.green, size: SC.from_width(24)),
                 SizedBox(width: SC.from_width(8)),
-                Text(
-                  '100% Safe & Private Conversation',
-                  style: TextStyle(
-                    fontFamily: 'ProductSans',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    '100% Safe & Private Conversation',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'ProductSans',
+                      fontSize: SC.from_width(17),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
             ),
+
             SizedBox(height: SC.from_width(12)),
             // Info Row
             Row(

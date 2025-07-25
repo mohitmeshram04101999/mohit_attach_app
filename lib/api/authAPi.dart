@@ -117,6 +117,7 @@ class AuthApi{
     required  String fullName,
     required  String mail,
     required  String gender,
+    required String age,
     required List<String> language,
 }) async
   {
@@ -173,6 +174,8 @@ class AuthApi{
     String? name,
     String? bio,
     String? gender,
+    String? email,
+    String? avtarUrl,
     List<String>? languages
   }) async
   {
@@ -182,7 +185,16 @@ class AuthApi{
       "name":name,
       "bio":bio,
       "gender":gender,
+      "email":email
     };
+
+
+    if(profileImage==null&&avtarUrl!=null)
+      {
+        d['imageURL'] = avtarUrl;
+      }
+
+
 
 
     Logger().t(d);
@@ -203,7 +215,7 @@ class AuthApi{
 
     req.headers.addAll(head);
     
-    if(profileImage!=null)
+    if(profileImage!=null&&avtarUrl==null)
       {
         req.files.add(await http.MultipartFile.fromPath("image", profileImage));
       }
@@ -235,8 +247,13 @@ class AuthApi{
   }
 
 
-
-
-
+  getAvtar() async
+  {
+    String uri = '${PathApi.baseUri}getAllAvtar';
+    var head = await DB().getFormHeader();
+    var resp = await http.get(Uri.parse(uri),headers: head);
+    respPrinter(uri,resp);
+    return resp;
+  }
 
 }

@@ -85,7 +85,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
 
 
               CustomTextField(
-
+                controller: p.ageController,
                 label: 'Age',
                 hintText: 'Enter Your Age',
                 keyTyp: TextInputType.number,

@@ -1,6 +1,7 @@
 
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:attach/modles/otp_responce.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
@@ -79,16 +80,22 @@ handleVideoCall(RemoteMessage message) async
 
   if(message.data['status']=="ANSWERED")
     {
-
+      log("user = ${message.data['user']}  \n call id = ${message.data['callId']} \n threadId = ${message.data['threadId']}");
       var user  = User.fromJson(jsonDecode(message.data['user']));
+      
+      log('context = ${navigatorKey.currentContext}');
+      
       if(navigatorKey.currentContext!=null)
         {
+          log("context is not null");
           var p = Provider.of<VideoCallProvider>(navigatorKey.currentContext!,listen: false);
+          log("chackin if user is on call screen ${p.isOnCallScreen} or ${p.outGoingCallScreen}");
           if(p.outGoingCallScreen)
           {
             p.updateOutGoingCallStatus(false);
             Navigator.pop(navigatorKey.currentContext!);
           }
+          log("navigationg to call screen");
           RoutTo(navigatorKey.currentContext!, child: (p0, p1) =>VideoCallScreen(user: user, callId: message.data['callId'], channelId: message.data['threadId']),);
         }
     }

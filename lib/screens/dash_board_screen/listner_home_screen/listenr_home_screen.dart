@@ -108,30 +108,40 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
 
 
 
-                      Consumer<HomeProvider>(builder: (context, home, child) =>
-                          CarouselSlider(
-                            items: [
-                              for (int i = 0; i < (home.data?.homeBanner?.length??0); i++)
-                                Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  margin: EdgeInsets.symmetric(horizontal: 14),
-                                  decoration: BoxDecoration(
-                                    // color: Colors.red,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Image.network(
-                                    home.data?.homeBanner?[i]??'',
-                                    height: SC.from_width(140),
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                            ],
-                            options: CarouselOptions(
-                              height: SC.from_width(101),
-                              viewportFraction: 1,
-                            ),
-                          )),
+                      Consumer<HomeProvider>(builder: (context, home, child) {
+                        if(home.data?.homeBanner==null){
+                          return Container();
+                        }
+                        else if(home.data?.homeBanner?.length==0)
+                          {
+                            return Container();
+                          }
+                        return CarouselSlider(
+                          items: [
+                            for (int i = 0; i < (home.data?.homeBanner?.length??0); i++)
+                              Container(
+                                clipBehavior: Clip.hardEdge,
+                                margin: EdgeInsets.symmetric(horizontal: 14),
+                                decoration: BoxDecoration(
+                                  // color: Colors.red,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Image.network(
+                                  home.data?.homeBanner?[i]??'',
+                                  height: SC.from_width(140),
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                          ],
+                          options: CarouselOptions(
+                            height: SC.from_width(101),
+                            viewportFraction: 1,
+                          ),
+                        );
+                      }
+
+                      ),
 
 
                       //
@@ -484,7 +494,7 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                                 ),
                               ),
                             ),
-                            child: Text("Go Online"),
+                            child: Text("Availability"),
                           ),
                         ),
                       ),
@@ -518,7 +528,8 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
 
 
                   right: SC.from_width(14),
-                  bottom: SC.from_width(isShow ? 195 :14),
+                  bottom: SC.from_width(isShow ? 135 :14),
+                  // bottom: SC.from_width(isShow ? 195 :14),
                   duration: Duration(milliseconds: 500),
                   child: Consumer<HomeProvider>(
                     builder:
@@ -549,7 +560,8 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                 (context, p, child) => AnimatedPositioned(
                   curve: Interval(.3, .6, curve: Curves.linear),
               right: SC.from_width(14),
-              bottom: SC.from_width(isShow ? 135 :14),
+                  bottom: SC.from_width(isShow ? 75 :14),
+              // bottom: SC.from_width(isShow ? 135 :14),
               duration: Duration(milliseconds: 500),
               child: Consumer<HomeProvider>(
                 builder:
@@ -574,38 +586,38 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
             ),
           ),
 
-          Consumer<StoryProvider>(
-            builder:
-                (context, p, child) => AnimatedPositioned(
-              curve: Interval(isShow? .6:0,isShow? .9:.3, curve: Curves.linear),
-              right: SC.from_width(14),
-              bottom: SC.from_width(isShow ? 75 :14),
-              duration: Duration(milliseconds: 500),
-              child: Consumer<HomeProvider>(
-                builder:
-                    (context, p, child) => FloatingActionButton(
-
-                      heroTag: 'floatingButton1',
-
-                  backgroundColor: Colors.white,
-                  // backgroundColor: Const.primeColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Image.asset(
-                    "assets/newIcons/img_5.png",
-                    width: SC.from_width(30),
-                  ),
-
-                  onPressed: (){
-                    isShow = !isShow;
-                    setState(() {});
-                    RoutTo(context, child: (p0, p1) => AddTestStoryScreen(),);
-                  },
-                ),
-              ),
-            ),
-          ),
+          // Consumer<StoryProvider>(
+          //   builder:
+          //       (context, p, child) => AnimatedPositioned(
+          //     curve: Interval(isShow? .6:0,isShow? .9:.3, curve: Curves.linear),
+          //     right: SC.from_width(14),
+          //     bottom: SC.from_width(isShow ? 75 :14),
+          //     duration: Duration(milliseconds: 500),
+          //     child: Consumer<HomeProvider>(
+          //       builder:
+          //           (context, p, child) => FloatingActionButton(
+          //
+          //             heroTag: 'floatingButton1',
+          //
+          //         backgroundColor: Colors.white,
+          //         // backgroundColor: Const.primeColor,
+          //         shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(14),
+          //         ),
+          //         child: Image.asset(
+          //           "assets/newIcons/img_5.png",
+          //           width: SC.from_width(30),
+          //         ),
+          //
+          //         onPressed: (){
+          //           isShow = !isShow;
+          //           setState(() {});
+          //           RoutTo(context, child: (p0, p1) => AddTestStoryScreen(),);
+          //         },
+          //       ),
+          //     ),
+          //   ),
+          // ),
 
           Consumer<StoryProvider>(
             builder:

@@ -21,15 +21,16 @@ bool bgServiceIsRunning  = false;
 
 
 
+
 Future<void> initBgService() async {
-
-
 
 
   if(bgServiceIsRunning){
     print("bg service is already running");
     return;
   }
+
+  // bgServiceIsRunning = true;
 
   Logger().i("Init bg service is Called");
 
@@ -162,42 +163,25 @@ void _onStart(ServiceInstance service) async {
 
 
 
-  Timer.periodic(Duration(seconds: 15), (timer) async {
-    if (service is AndroidServiceInstance) {
- 
-      service.setForegroundNotificationInfo(
-        title: "Attach Is Running",
-        content: "Online",
-      );
-    }
+  if (service is AndroidServiceInstance) {
 
+    service.setForegroundNotificationInfo(
+      title: "You Are Online",
+      content: "You Are Receiving Calls and Messages.",
 
-    service.invoke('update', {
-      'timestamp': DateTime.now().toString(),
-    });
-
-
-    // service.on("stop").listen((d){
-    //
-    //   service.invoke("stopCallListener");
-    //   service.stopSelf();
-    //   Logger().e("BackGround SService has been Storp");
-    //   bgServiceIsRunning = false;
-    // });
-
-    service.on("stop").listen((d) {
-      service.invoke("stopCallListener");// stop listeners
-      service.stopSelf();
-      bgServiceIsRunning = false;
-      Logger().e("Background Service stopped");
-    });
+    );
+  }
 
 
 
-
-
-
+  service.on("stop").listen((d) {
+    service.invoke("stopCallListener");// stop listeners
+    service.stopSelf();
+    bgServiceIsRunning = false;
+    Logger().e("Background Service stopped");
   });
+
+
 }
 
 
