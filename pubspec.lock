@@ -362,10 +362,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_callkit_incoming
-      sha256: "21d645f0bc622c3ab9c113e289abbbd169a0f9143f3eb2a05ef1fb01b729c239"
+      sha256: f9cd4be8ac01cfaf88884a0433ce2fd2ad753133189ff034b274931296fe3be8
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.2"
+    version: "2.5.5"
   flutter_lints:
     dependency: "direct dev"
     description:

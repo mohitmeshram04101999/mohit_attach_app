@@ -47,6 +47,23 @@
         <activity
             android:name=".CustomCallIncomming"
             android:exported="false" />
+        
+
+
+        <service android:name="me.carda.awesome_notifications.DartBackgroundService">
+
+
+
+        </service>
+
+        <receiver android:name="me.carda.awesome_notifications.DartNotificationActionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="me.carda.awesome_notifications.ACTION_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+
+
 
         <service
             android:name="com.hiennv.flutter_callkit_incoming.CallkitIncomingService"

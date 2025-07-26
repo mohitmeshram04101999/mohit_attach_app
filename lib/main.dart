@@ -5,6 +5,7 @@ import 'package:attach/const/app_constante.dart';
 import 'package:attach/firebase_options.dart';
 
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/noticiation/notification%20action%20handler.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/noticiation/notificationservice/backgoundNotification%20handler.dart';
 import 'package:attach/providers/appLifesycalProvider.dart';
@@ -69,32 +70,26 @@ offScreenShot() async
 
 
 void main() async {
-  print("for main 1");
   await WidgetsFlutterBinding.ensureInitialized();
-  print("for main 2");
 
   await offScreenShot();
-  print("for main 3");
-  
+
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform
   );
 
-  print("for main 4");
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  print("for main 5");
 
 
 
 
   const callChannel = MethodChannel('com.attachchat.app/call');
 
-  print("for main 6");
 
 
   callChannel.setMethodCallHandler((call) async {
@@ -118,8 +113,6 @@ void main() async {
 
 
 
-
-  print("for main 7");
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
 
@@ -131,13 +124,12 @@ void main() async {
 
   //
 
-  print("for main 8");
 
-
-
-
-
-  print("for main 9");
+  await AwesomeNotifications().setListeners(
+      onActionReceivedMethod:notificationActionHandler,
+    onDismissActionReceivedMethod: (d) async{
+      print("onDismissActionReceivedMethod $d");},
+  );
 
 
 

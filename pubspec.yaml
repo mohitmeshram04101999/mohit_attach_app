@@ -40,7 +40,8 @@ dependencies:
   flutter_rating: ^2.0.2
   dotted_border: ^2.1.0
   share_plus: ^11.0.0
-  flutter_callkit_incoming: ^2.5.2
+#  flutter_callkit_incoming: ^2.5.2
+  flutter_callkit_incoming: ^2.5.5
   provider: ^6.1.5
   permission_handler: ^12.0.0+1
 #  chat_bubbles: ^1.7.0

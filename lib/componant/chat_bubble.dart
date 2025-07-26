@@ -135,6 +135,7 @@ class _ChatBubbleState extends State<ChatBubble> with TickerProviderStateMixin {
                           self ? Colors.white : const Color.fromRGBO(58, 61, 64, 1),
                     ),
                   ),
+
                   Text(
                     widget.message?.callHistory?.status == 'COMPLETE'
                         ? 'Answered'

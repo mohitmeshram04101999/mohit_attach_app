@@ -1,8 +1,10 @@
 import 'package:attach/api/local_db.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/load_chat_model.dart';
+import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/other/date_time_manager.dart';
+import 'package:attach/screens/dash_board_screen/inbox/mediaViewScreenForChat.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -77,16 +79,7 @@ class _MessageMediaWidgetState extends State<MessageMediaWidget> {
                   children: [
                     GestureDetector(
                         onTap: (){
-                          if(controller?.value.isPlaying==true)
-                            {
-                              controller?.pause();
-                            }
-                          else{
-                            controller?.play();
-                          }
-                          setState(() {
-
-                          });
+                      RoutTo(context, child: (p0, p1) => MediaViewScreenForChat(type: 'video', url: widget.message.media??''),);
                         },
                         child: VideoPlayer(controller!)),
                     if(controller?.value.isPlaying!=true)
@@ -104,7 +97,7 @@ class _MessageMediaWidgetState extends State<MessageMediaWidget> {
                             size: 50,
                           ),
                           onPressed: (){
-                            controller?.play();
+                            RoutTo(context, child: (p0, p1) => MediaViewScreenForChat(type: 'video', url: widget.message.media??''),);
                             setState(() {
 
                             });
@@ -122,13 +115,20 @@ class _MessageMediaWidgetState extends State<MessageMediaWidget> {
           if(widget.message.mediaType=='IMAGE')
             AspectRatio(
             aspectRatio: 1.4,
-            child: Container(
+            child: GestureDetector(
+              onTap: (){
+                RoutTo(context, child: (p0, p1) => MediaViewScreenForChat(type: 'img', url: widget.message.media??''),);
+              },
+              child: Container(
 
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Image.network(widget.message.media??'',fit:  BoxFit.cover,)),
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Image.network(widget.message.media??'',fit:  BoxFit.cover,
+                  errorBuilder:  (context, error, stackTrace) => Center(child: Image.asset("assets/icons/inboxpageicons/img.png",width: SC.from_width(100),)),
+                  )),
+            ),
           ),
 
           Row(

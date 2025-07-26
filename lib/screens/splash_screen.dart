@@ -32,11 +32,13 @@ class _SplashScreenState extends State<SplashScreen> {
   {
 
     if(widget.action==null) {
-      MyHelper.snakeBar(context, title: "init action null h ", message: "We have receved action ");
+      print("action null h ab kya kere ");
+
     }
     else
       {
-        MyHelper.snakeBar(context, title: "initifl action nall nahi h ", message: "oooooooooooo yeeeeeee");
+        print("action null nai h to kya  karna h ");
+
       }
 
 

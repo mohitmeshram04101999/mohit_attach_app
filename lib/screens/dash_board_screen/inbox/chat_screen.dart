@@ -64,6 +64,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
 
+  bool _canTap = true;
+
 
 
   @override
@@ -177,16 +179,28 @@ class _ChatScreenState extends State<ChatScreen> {
                   Consumer<VideoCallProvider>(
                     builder:
                         (context, videoCall, child) => IconButton(
-                          onPressed: () {
-                            var u = User.fromJson(p.user!.toJson());
+                          onPressed: () async {
 
-                            Logger().i(u.toJson());
+                            if(_canTap ==false)
+                              {
+                                return ;
+                              }
+                            else
+                              {
+                                _canTap = false;
+                                var u = User.fromJson(p.user!.toJson());
 
-                            videoCall.makeVideoCall(
-                              context,
-                              threadId: p.threadId ?? '',
-                              user: u,
-                            );
+                                Logger().i(u.toJson());
+
+                                  await videoCall.makeVideoCall(
+                                  context,
+                                  threadId: p.threadId ?? '',
+                                  user: u,
+                                );
+                                  _canTap = true;
+                              }
+
+
                           },
                           icon: Image.asset(
                             "assets/icons/inboxpageicons/vid.png",
@@ -201,12 +215,21 @@ class _ChatScreenState extends State<ChatScreen> {
                   Consumer<AudioCallProvider>(
                     builder:
                         (context, audionCall, child) => IconButton(
-                          onPressed: () {
-                            audionCall.makeAudioCall(
-                              context,
-                              user: User.fromJson(p.user!.toJson()),
-                              threadId: p.threadId ?? '',
-                            );
+                          onPressed: () async {
+                            if(_canTap ==false)
+                              {
+                                return ;
+                              }
+                            else
+                              {
+                                _canTap = false;
+                                await  audionCall.makeAudioCall(
+                                  context,
+                                  user: User.fromJson(p.user!.toJson()),
+                                  threadId: p.threadId ?? '',
+                                );
+                                _canTap = true;
+                              }
                           },
                           color: Const.yellow,
                           icon: Image.asset(

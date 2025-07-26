@@ -214,7 +214,7 @@ class NotificationService{
        debug: true);
    
    
-   await AwesomeNotifications().setListeners(onActionReceivedMethod:notificationActionHandler);
+
 
 
  }
@@ -297,6 +297,7 @@ class NotificationService{
              fullScreenIntent: true,
              wakeUpScreen: true,
              criticalAlert: true,
+             payload:  {"Mene data bheja":"On thune reecve kyou nahi kiya"},
              // category: NotificationCategory.Alarm,
              notificationLayout: NotificationLayout.Default,
              autoDismissible: false,

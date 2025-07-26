@@ -52,8 +52,8 @@ class CallKitManager
       textDecline: 'Decline',
 
       missedCallNotification: NotificationParams(
-        showNotification: true,
-        isShowCallback: true,
+        showNotification: false,
+        isShowCallback: false,
         subtitle: 'Missed call',
         callbackText: 'Call back',
       ),
@@ -67,6 +67,8 @@ class CallKitManager
         subtitle: 'Calling...',
         callbackText: 'Hang Up',
       ),
+
+
 
 
       duration: 30000,

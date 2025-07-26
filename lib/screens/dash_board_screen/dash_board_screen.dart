@@ -11,6 +11,7 @@ import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/providers/appLifesycalProvider.dart';
 
 import 'package:attach/providers/home_provider.dart';
+import 'package:attach/providers/my_hleper.dart';
 
 import 'package:attach/providers/profileProvider.dart';
 import 'package:attach/screens/dash_board_screen/Home/home_screen.dart';
@@ -106,6 +107,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                await profileProvider.goOnlineOrOffline(context);
              }
          }
+
+
+       // if(widget.action==null)
+       //   {
+       //     MyHelper.snakeBar(context, title: "Action null h as been picked", message: "message");
+       //   }
+       // else
+       //   {
+       //     MyHelper.snakeBar(context, title: "action has been picked", message: "message");
+       //   }
 
 
 

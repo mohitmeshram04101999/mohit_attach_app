@@ -74,7 +74,7 @@ class _EditChatPostDialogState extends State<EditChatPostDialog> {
                         children: [
                           Icon(Icons.videocam_rounded,size: SC.from_width(30),color: Colors.white,),
                           SizedBox(width: SC.from_width(10),),
-                          Text(widget.filePath.split("/").last,style: Const.font_400_14(context,color: Colors.white),),
+                          Flexible(child: Text(widget.filePath.split("/").last,style: Const.font_400_14(context,color: Colors.white),)),
                         ],
 
                       ),
