@@ -1,5 +1,6 @@
 
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attach/noticiation/notification%20action%20handler.dart';
@@ -277,7 +278,7 @@ class NotificationService{
              fullScreenIntent: true,
              wakeUpScreen: true,
              criticalAlert: false,
-             payload:{"Mene data bheja":"On thune reecve kyou nahi kiya"},
+             payload:(message.data!=null)?message.data.map((key, value) => MapEntry(key, value.toString())):null,
              // category: NotificationCategory.Alarm,
              notificationLayout: NotificationLayout.Default,
              autoDismissible: true,

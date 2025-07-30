@@ -120,13 +120,14 @@ void main() async {
   print("Getting init action ....");
   ReceivedAction? initTaction  = await AwesomeNotifications().getInitialNotificationAction();
 
-  print("we get Init Action so this is this is $initTaction");
+  print("d $initTaction");
 
   //
 
 
   await AwesomeNotifications().setListeners(
       onActionReceivedMethod:notificationActionHandler,
+
     onDismissActionReceivedMethod: (d) async{
       print("onDismissActionReceivedMethod $d");},
   );

@@ -62,8 +62,8 @@ class CallKitManager
 
 
       callingNotification: const NotificationParams(
-        showNotification: true,
-        isShowCallback: true,
+        showNotification: false,
+        isShowCallback:false,
         subtitle: 'Calling...',
         callbackText: 'Hang Up',
       ),
@@ -135,7 +135,7 @@ class CallKitManager
         isCustomNotification: true,
         isShowLogo: false,
         logoUrl: 'https://i.pravatar.cc/100',
-        ringtonePath: 'system_ringtone_default',
+        ringtonePath: 'custom_ring',
         backgroundColor: '#10001B',
 
         actionColor: '#4CAF50',

@@ -7,6 +7,7 @@ import 'package:attach/modles/custom_calls_info.dart';
 import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/noticiation/notification%20action%20handler.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/providers/appLifesycalProvider.dart';
 
@@ -109,14 +110,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
          }
 
 
-       // if(widget.action==null)
-       //   {
-       //     MyHelper.snakeBar(context, title: "Action null h as been picked", message: "message");
-       //   }
-       // else
-       //   {
-       //     MyHelper.snakeBar(context, title: "action has been picked", message: "message");
-       //   }
+       if(widget.action!=null)
+         {
+
+           DateTime? actionTime = widget.action?.actionDate;
+
+           if(actionTime!=null)
+             {
+               var diff = DateTime.now().difference(actionTime).inSeconds;
+               print("diifreance of action time is $diff");
+               if(diff<10)
+                 {
+                   print("get i have an iinit action so i am going to handel it");
+                   notificationActionHandler(widget.action!);
+                 }
+             }
+
+
+         }
 
 
 
@@ -129,6 +140,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
 
 initMyApp() async{
+
+
+  Provider.of<Socket_Provider>(context,listen: false).connectSocket();
 
 
    print("I am a init function");
@@ -183,7 +197,7 @@ initMyApp() async{
     super.initState();
     print("I am a dashboard screen");
 
-    Provider.of<Socket_Provider>(context,listen: false).connectSocket();
+
     print("I am a dashboard screen");
     // Provider.of<ChatListProvider>(context,listen: false).getContact();
     initMyApp();

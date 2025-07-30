@@ -14,6 +14,7 @@ import 'package:attach/screens/dash_board_screen/inbox/tabs/videoCallScreen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_callkit_incoming/entities/call_event.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -105,8 +106,11 @@ _callKitEventHandlerForVideoCall(CallEvent? event,{required ServiceInstance? ser
 
     case Event.actionCallTimeout:
       {
+
         Map extra = data['extra'];
         String callId = extra['callId'];
+        FlutterCallkitIncoming.endCall(callId);
+
 
         CallsApi().updateCall(
           callId: callId,

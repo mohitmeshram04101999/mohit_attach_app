@@ -126,6 +126,7 @@ class _BecomeListenerMainState extends State<BecomeListenerMain> {
 
                 return  PageView(
                   controller: _controller,
+                  physics: NeverScrollableScrollPhysics(),
                   onPageChanged: (value) {
                     p.loadMore(context);
                     setState(() {
@@ -136,7 +137,7 @@ class _BecomeListenerMainState extends State<BecomeListenerMain> {
                     for(int i=0;i<p.totalPage;i++)
                       if(i<p.questionList.length)...[
                         BecomeListenerTapOne(
-                          isLast: i==p.questionList.length-1,
+                          isLast: i==p.totalPage-1,
                           questionForListenerModel: p.questionList[i],pageController: _controller,),
                       ]
                     else...[

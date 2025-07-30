@@ -77,7 +77,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                   ),
                 )
                     :
-                Text("Waiting......"),
+                Center(child: Text("")),
                 //
                 // Stack(
                 //   children: [

@@ -12,6 +12,7 @@ import 'package:attach/myfile/animated%20dilog.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/other/date_time_manager.dart';
 import 'package:attach/providers/audio%20call%20provider.dart';
 
@@ -27,8 +28,8 @@ import 'package:provider/provider.dart';
 import 'package:no_screenshot/no_screenshot.dart';
 
 class ChatScreen extends StatefulWidget {
-  final ChatContact? contact;
-  const ChatScreen({this.contact, Key? key}) : super(key: key);
+  final String? contactId;
+  const ChatScreen({this.contactId, Key? key}) : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -45,12 +46,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
 
 
-  // onScreenShot() async
-  // {
-  //   var result =  await noScreenshot.screenshotOn();
-  //   print("Screen Shot is of $result");
-  // }
-
 
   final  noScreenshot = NoScreenshot.instance;
 
@@ -58,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    var p =  Provider.of<ChatProvider>(context,listen: false);
+    var p =  Provider.of<ChatProvider>(navigatorKey.currentContext!,listen: false);
     p.setOnChatScreen(false);
     // onScreenShot();
   }
@@ -97,20 +92,15 @@ class _ChatScreenState extends State<ChatScreen> {
                       children: [
                         Icon(Icons.arrow_back),
                         SizedBox(width: SC.from_width(5)),
-                        Hero(
-                          tag:
-                              'chat_page${widget.contact?.user?.id}${widget.contact?.user?.image ?? ''}',
-                          child: SizedBox(
-                            height: SC.from_width(40),
-                            width: SC.from_width(40),
-                            child: OnlineUserImageWidget(
-                              online: false,
-                              image:
+                        SizedBox(
+                          height: SC.from_width(40),
+                          width: SC.from_width(40),
+                          child: OnlineUserImageWidget(
+                            online: false,
+                            image:
 
-                                  p.user?.image ??
-                                  widget.contact?.user?.image ??
-                                  '',
-                            ),
+                                p.user?.image ??
+                                '',
                           ),
                         ),
                       ],
@@ -139,9 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    p.user?.name ??
-                                        widget.contact?.user?.name ??
-                                        '',
+                                    p.user?.name ?? '',
                                     style: Const.font_500_16(context),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -154,6 +142,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                     width: SC.from_width(18),
                                   ),
                               ],
+                            ),
+                            Text(
+                              '${p.threadId.toString()}',
+                              style: Const.font_400_12(
+                                context,
+                                size: SC.from_width(10),
+                              ),
                             ),
                             Text(
                               (p.user?.online ?? false)
@@ -304,9 +299,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     child: InkWell(
                       borderRadius:BorderRadius.all( Radius.circular(100)) ,
-                      onTap: (){
-                        p.endSession(context);
+                      onTap: () async{
+                        if(_canTap)
+                          {
+                            _canTap = false;
+                               await  p.endSession(context);
 
+                               _canTap = true;
+
+                          }
                     }, child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
                       child: Row(

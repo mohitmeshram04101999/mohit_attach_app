@@ -69,6 +69,10 @@ class ChatProvider with ChangeNotifier {
 
   setSocket(Socket s) {
     _socket = s;
+    if(_threadId!=null)
+      {
+        startChat(_threadId);
+      }
   }
 
   startTyping() async{

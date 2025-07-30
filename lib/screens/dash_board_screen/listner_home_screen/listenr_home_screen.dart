@@ -228,12 +228,21 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                         height: SC.from_width(60),
                         child: Stack(
                           children: [
-                            Center(
-                              child: Text(
-                                (p.user?.name ?? '').split(" ").first,
-                                style: Const.font_900_20(
-                                  context,
-                                  size: SC.from_width(28),
+                            Padding(
+                              padding:  EdgeInsets.only(right: SC.from_width(70)),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                                  child: Text(
+                                    // (p.user?.name ?? '').split(" ").first,
+                                    (p.user?.name ?? ''),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Const.font_900_20(
+                                      context,
+                                      size: SC.from_width(28),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -460,17 +469,17 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                       ),
                       SizedBox(height: SC.from_width(58)),
 
-                      Center(
-                        child: Text(
-                          "Chat Call",
-                          style: Const.font_500_16(context)?.copyWith(
-                            decoration: TextDecoration.underline,
-                            decorationColor: Const.yellow,
-                            color: Const.yellow,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: SC.from_width(26)),
+                      // Center(
+                      //   child: Text(
+                      //     "Chat Call",
+                      //     style: Const.font_500_16(context)?.copyWith(
+                      //       decoration: TextDecoration.underline,
+                      //       decorationColor: Const.yellow,
+                      //       color: Const.yellow,
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(height: SC.from_width(26)),
 
                       Center(
                         child: SizedBox(

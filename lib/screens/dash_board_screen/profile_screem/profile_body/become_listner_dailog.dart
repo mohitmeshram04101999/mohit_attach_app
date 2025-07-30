@@ -39,7 +39,7 @@ class BecomeListenerDailog extends StatelessWidget {
                      ),
                      onPressed: (){
                        Navigator.pop(context,false);
-                     }, child: Text("Cancle",style: Const.font_400_14(context,color: Colors.white))),
+                     }, child: Text("Cancel",style: Const.font_400_14(context,color: Colors.white))),
                ),
              ),
 

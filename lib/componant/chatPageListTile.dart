@@ -30,7 +30,7 @@ class ChatPageListTile extends StatelessWidget {
        onTap: (){
          print("Tap");
          Provider.of<ChatProvider>(context,listen: false).startChat(contact?.id??'');
-         RoutTo(context, child: (p0, p1) => ChatScreen(contact: contact),);
+         RoutTo(context, child: (p0, p1) => ChatScreen(contactId: contact?.id??''),);
        },
        child: Container(
          // color: Colors.red,

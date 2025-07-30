@@ -42,7 +42,7 @@ class _GoOnlineDilogState extends State<GoOnlineDilog> {
         SizedBox(height: SC.from_width(19),),
         Padding(
           padding:  EdgeInsets.symmetric(horizontal: SC.from_width(25)),
-          child: Text("Set Availablity",style: Const.font_900_20(context,size: SC.from_width(19)),),
+          child: Text("Set Availability",style: Const.font_900_20(context,size: SC.from_width(19)),),
         ),
 
         //

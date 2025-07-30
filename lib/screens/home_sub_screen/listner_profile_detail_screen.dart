@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:attach/api/local_db.dart';
 import 'package:attach/componant/custome_shimmer.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/home_data_responce_model.dart';
+import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/action%20Button.dart';
 import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/providers/audio%20call%20provider.dart';
@@ -65,7 +67,7 @@ class _ListenerProfileDetailScreenState
               appBar: AppBar(
                 actions: [
                   //
-                  if (p.detail?.setAvailability?.videoCall ?? false)
+                  if ((p.detail?.setAvailability?.videoCall ?? false)&& DB.curruntUser?.userType==UserType.user)
                     IconButton(
                       onPressed: () async{
                 if(_canTap){
@@ -97,7 +99,7 @@ class _ListenerProfileDetailScreenState
                   SizedBox(width: SC.from_width(10)),
 
                   ///
-                  if (p.detail?.setAvailability?.audioCall ?? false)
+                  if ((p.detail?.setAvailability?.audioCall ?? false) && DB.curruntUser?.userType==UserType.user)
                     IconButton(
                       onPressed: () async{
                         if(_canTap){
