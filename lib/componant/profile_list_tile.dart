@@ -43,20 +43,6 @@ class ProfileListTile extends StatelessWidget {
         ),
       ),
 
-
-      // child: ListTile(
-      //   // contentPadding: EdgeInsets.symmetric(horizontal: ),
-      //   leading:SizedBox(height: SC.from_width(33),
-      // child: Image.asset(icon),),
-      //   title: Text(title),
-      //   subtitle: Text(subTitle),
-      //   onTap: onTap,
-      //
-      //   titleTextStyle: Const.font_500_14(context,size: SC.from_width(15)),
-      //
-      //   subtitleTextStyle: Const.roboto_300_12(context,size: SC.from_width(13)),
-      //
-      // ),
     );
   }
 }

@@ -42,6 +42,8 @@ class AuthProvider with ChangeNotifier{
   logIn(BuildContext context) async
   {
     Logger().e(_phone.text);
+
+    //--------------------------
     var resp = await AuthApi().logIn(_phone.text.trim());
 
     switch(resp.statusCode)

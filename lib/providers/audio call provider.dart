@@ -100,10 +100,10 @@ class AudioCallProvider with ChangeNotifier{
   }
 
 
-  startAudioCall(BuildContext context)
-  {
-    RoutTo(context, child: (p0, p1) => OutgoingVideoCallScreen(user: DB.curruntUser!, threadId: "threadId", callId: "callId"));
-  }
+  // startAudioCall(BuildContext context)
+  // {
+  //   RoutTo(context, child: (p0, p1) => OutgoingVideoCallScreen(user: DB.curruntUser!, threadId: "threadId", callId: "callId"));
+  // }
 
   Future<void> toggleSpeaker() async {
     _isSpeakerOn = !_isSpeakerOn;

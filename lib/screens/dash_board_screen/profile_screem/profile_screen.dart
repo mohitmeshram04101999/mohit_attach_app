@@ -11,7 +11,7 @@ import 'package:attach/screens/dash_board_screen/profile_screem/profile_body/bec
 import 'package:attach/screens/dash_board_screen/profile_screem/profile_body/listner_card.dart';
 import 'package:attach/screens/dash_board_screen/profile_screem/profile_body/profile_view.dart';
 import 'package:attach/screens/profile_sub_screens/about_us.dart';
-import 'package:attach/screens/profile_sub_screens/add_bank_account_screen/add_bank_account_screen.dart';
+
 import 'package:attach/screens/profile_sub_screens/add_bank_account_screen/fix_add_bank_screen.dart';
 import 'package:attach/screens/profile_sub_screens/contact_us_screen.dart';
 import 'package:attach/screens/profile_sub_screens/edit_profile.dart';

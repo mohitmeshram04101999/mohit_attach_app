@@ -12,6 +12,7 @@ import 'package:attach/providers/call_kit_mennager.dart';
 import 'package:attach/providers/home_provider_1.dart';
 import 'package:attach/providers/profileProvider.dart';
 import 'package:attach/providers/story_provider.dart';
+import 'package:attach/providers/transection_history_provider.dart';
 import 'package:attach/screens/dash_board_screen/listner_home_screen/go_online_dilog.dart';
 import 'package:attach/screens/dash_board_screen/listner_home_screen/kyc_screen.dart';
 
@@ -26,6 +27,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+
+
 
 class ListnerHomeScreen extends StatefulWidget {
   const ListnerHomeScreen({super.key});
@@ -661,6 +664,20 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
               ),
             ),
           ),
+          
+          
+          
+          if(kDebugMode)
+            Center(
+              child: FloatingActionButton(onPressed: (){
+
+                // Provider.of<TransectionHistoryProvider>(context,listen: false).rozarPay();
+
+                print(context.widget);
+
+               // var  _razorpay = Razorpay();
+              }),
+            )
         ],
       ),
     );

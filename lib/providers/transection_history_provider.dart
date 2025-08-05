@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:attach/api/transection_api.dart';
 import 'package:attach/modles/all_transection_model.dart';
@@ -6,6 +7,7 @@ import 'package:attach/providers/my_hleper.dart';
 import 'package:attach/providers/profileProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class TransectionHistoryProvider with ChangeNotifier {
   List<TransectionInfo> _transectionInfo = [];
@@ -257,4 +259,49 @@ class TransectionHistoryProvider with ChangeNotifier {
         break;
     }
   }
+
+
+
+  // --------------------------------------Razorpay------------------------------------ //
+
+
+  rozarPay() async {
+
+    var _razorpay = Razorpay();
+
+    var options = {
+      'key': 'rzp_test_3nq9sYvO8QK7wM',
+      'amount': 100,
+      'name': 'Acme Corp.',
+      'description': 'Fine T-Shirt',
+      'retry': {'enabled': true, 'max_count': 1},
+      'send_sms_hash': true,
+      'prefill': {'contact': '8888888888', 'email': 'VXKq4@example.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint('Error: e');
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Do something when payment succeeds
+    print(response.paymentId);
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+    print('Payment failed'+response.code.toString());
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet was selected
+    print('External wallet: ' + response.walletName.toString());
+  }
+
+
 }

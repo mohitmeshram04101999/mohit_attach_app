@@ -1,7 +1,8 @@
 
 class PathApi
 {
-  static String baseUri = 'https://attach.loader.co.in/api/';
+  // static String baseUri = 'https://attach.loader.co.in/api/';
+  static String baseUri = 'https://apiattach.framekarts.com/api/';
   static String logIn = 'users/sendOtp';
   static String verify = 'users/verifyOtp';
   static String createProfile = 'users/createProfile';

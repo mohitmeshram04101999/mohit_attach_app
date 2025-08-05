@@ -33,7 +33,7 @@ class Socket_Provider with ChangeNotifier
      {
        print("Connect");
 
-       _socket = Io.io('http://attach.loader.co.in:5643 ',
+       _socket = Io.io('http://apiattach.framekarts.com:5643',
            Io.OptionBuilder()
                .setTransports(['websocket'])
                .setExtraHeaders({'foo': 'bar'})

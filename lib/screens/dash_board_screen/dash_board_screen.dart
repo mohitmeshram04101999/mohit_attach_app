@@ -207,7 +207,10 @@ initMyApp() async{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+   return Scaffold(
+
+
 
       // appBar: AppBar(title: Text("${widget.action}"),),
 
@@ -232,14 +235,7 @@ initMyApp() async{
               }
           }),
 
-          // HomeScreen(),
-          // if(false)...[
-          //   // HomeScreen(),
-          //   ListnerHomeScreen()
-          // ]
-          // else...[
-          //   HomeScreen(),
-          // ],
+
           WalletScreen(),
           InboxScreen(),
           ProfileScreen(),
@@ -332,6 +328,8 @@ initMyApp() async{
       ),
 
     );
+
+
   }
 }
 

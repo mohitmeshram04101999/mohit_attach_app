@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:attach/api/local_db.dart';
 import 'package:attach/componant/custome_shimmer.dart';
+import 'package:attach/componant/profile_list_tile.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/home_data_responce_model.dart';
 import 'package:attach/modles/usertype.dart';
@@ -425,6 +426,13 @@ class _ListenerProfileDetailScreenState
                     ),
                   ),
                   SizedBox(height: SC.from_width(20)),
+
+
+                  ProfileListTile(
+                    title: "Ab",
+                    subTitle:  "this is all about me",
+                    icon: "assets/icons/home_icon/solar_user-group-bold.png",
+                  ),
 
                   CustomShimmer(
                     loading: p.loading,

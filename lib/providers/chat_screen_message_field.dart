@@ -44,6 +44,7 @@ class _ChatScreenMessageFieldState extends State<ChatScreenMessageField> {
             children: [
               Expanded(child:
               Material(
+                color: Colors.transparent,
                 child: Container(
                 
                   decoration: BoxDecoration(
@@ -144,7 +145,7 @@ class _ChatScreenMessageFieldState extends State<ChatScreenMessageField> {
 
 
                     child: Material(
-
+                      color: Colors.transparent,
                       child: InkWell(
                         onTap: (){
                           if(p.textEditingController.text.isNotEmpty)
