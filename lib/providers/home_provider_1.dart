@@ -11,6 +11,7 @@ import 'package:attach/modles/usertype.dart';
 import 'package:attach/myfile/animated%20dilog.dart';
 
 import 'package:attach/noticiation/notificationService.dart';
+import 'package:attach/providers/anylistics_provider.dart';
 import 'package:attach/providers/my_hleper.dart';
 import 'package:attach/providers/story_provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -119,6 +120,7 @@ class HomeProvider with ChangeNotifier {
   uploadStory(BuildContext context,FileType type) async {
 
 
+    createEvent(eventName: AnilisticsEvent.interaction, componentName: "uploading story");
 
     FilePickerResult? result;
 
@@ -219,6 +221,10 @@ class HomeProvider with ChangeNotifier {
       }
       AwesomeNotifications().dismiss(1001);
     }
+    else
+      {
+        createEvent(eventName: AnilisticsEvent.interaction, componentName: "upload story failed");
+      }
   }
 
 

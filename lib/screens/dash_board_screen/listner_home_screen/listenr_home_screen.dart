@@ -7,6 +7,8 @@ import 'package:attach/const/app_constante.dart';
 
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/path_configuration/navigation_paths.dart';
+import 'package:attach/providers/anylistics_provider.dart';
 import 'package:attach/providers/call_kit_mennager.dart';
 
 import 'package:attach/providers/home_provider_1.dart';
@@ -17,7 +19,6 @@ import 'package:attach/screens/dash_board_screen/listner_home_screen/go_online_d
 import 'package:attach/screens/dash_board_screen/listner_home_screen/kyc_screen.dart';
 
 import 'package:attach/screens/home_sub_screen/notification_screen/notification_screen.dart';
-import 'package:attach/screens/storyView/add_test_story_screen.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -44,6 +45,7 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
     super.initState();
     print("this is init state and its calling get profile method");
     Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+    createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.listnerHomeScreen);
   }
 
   double progress = 0;
@@ -73,8 +75,11 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                     child: Container(
                       child: Stack(
                         children: [
-                          Center(child: IconButton(onPressed: (){
-                            RoutTo(context, child:(p0, p1) =>  NotificationScreen());
+                          Center(child: IconButton(onPressed: ()async{
+
+                            await RoutTo(context, child:(p0, p1) =>  NotificationScreen());
+                            createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.listnerHomeScreen);
+
                           }, icon:Image.asset('assets/icons/home_icon/bell 1.png',width: SC.from_width(21),) )),
                           if(p.data?.notificationCount!=null&&p.data?.notificationCount!=0)
                             Positioned(
@@ -195,14 +200,15 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                                 
                                 
                                 child: OutlinedButton(
-                                  onPressed: () {
+                                  onPressed: () async{
                                     if(p.user?.kycStatus=='PENDING')return;
                                     else
                                       {
-                                        RoutTo(
+                                         await RoutTo(
                                           context,
                                           child: (p0, p1) => KycScreen(),
                                         );
+                                         createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.listnerHomeScreen);
                                       }
 
 
@@ -257,8 +263,9 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                                   SizedBox(
                                     height: SC.from_width(35),
                                     child: InkWell(
-                                      onTap: () {
-                                        p.goOnlineOrOffline(context);
+                                      onTap: ()async{
+                                         await p.goOnlineOrOffline(context);
+                                         createEvent(eventName: AnilisticsEvent.online, componentName: '${p.user?.online}');
                                       },
                                       child: AbsorbPointer(
                                         absorbing: true,
@@ -489,11 +496,15 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                           height: SC.from_width(40),
                           width: SC.from_width(140),
                           child: OutlinedButton(
-                            onPressed: () {
-                              showModalBottomSheet(
+                            onPressed: () async {
+
+                              createEvent(eventName: AnilisticsEvent.dialogOpen, componentName:Screens.goOnlineDilog);
+                              await showModalBottomSheet(
                                 context: context,
                                 builder: (context) => GoOnlineDilog(),
                               );
+                              createEvent(eventName:AnilisticsEvent.navigation, componentName: Screens.listnerHomeScreen);
+
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateColor.resolveWith(
@@ -557,9 +568,10 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
                             width: SC.from_width(25),
                           ),
 
-                          onPressed: (){
-                            p.uploadStory(context,FileType.video);
+                          onPressed: ()async{
+                           await  p.uploadStory(context,FileType.video);
                             isShow = !isShow;
+                            createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.listnerHomeScreen);
                             setState(() {});
                           },
                         ),
@@ -671,10 +683,7 @@ class _ListnerHomeScreenState extends State<ListnerHomeScreen> {
             Center(
               child: FloatingActionButton(onPressed: (){
 
-                // Provider.of<TransectionHistoryProvider>(context,listen: false).rozarPay();
-
-                print(context.widget);
-
+                createEvent(eventName: AnilisticsEvent.navigation, componentName: "componentName");
                // var  _razorpay = Razorpay();
               }),
             )

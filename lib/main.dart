@@ -8,6 +8,7 @@ import 'package:attach/myfile/screen_dimension.dart';
 import 'package:attach/noticiation/notification%20action%20handler.dart';
 import 'package:attach/noticiation/notificationService.dart';
 import 'package:attach/noticiation/notificationservice/backgoundNotification%20handler.dart';
+import 'package:attach/providers/anylistics_provider.dart';
 import 'package:attach/providers/appLifesycalProvider.dart';
 import 'package:attach/providers/audio%20call%20provider.dart';
 
@@ -155,6 +156,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => NotificationProvider(),),
       ChangeNotifierProvider(create: (context) => BecomeListenerProvider(),),
       ChangeNotifierProvider(create: (context) => AppLifeCycleProvider(),),
+      ChangeNotifierProvider(create: (context) => AnilisticsProvider(),),
     ],
       child:  MyApp(action: initTaction)));
 }

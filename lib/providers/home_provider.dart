@@ -1,4 +1,6 @@
+import 'package:attach/api/apiPath.dart';
 import 'package:attach/noticiation/notificationService.dart';
+import 'package:attach/providers/anylistics_provider.dart';
 import 'package:attach/providers/chatListProvider.dart';
 import 'package:attach/providers/chatProvider.dart';
 import 'package:attach/providers/home_provider_1.dart';
@@ -33,7 +35,7 @@ class Socket_Provider with ChangeNotifier
      {
        print("Connect");
 
-       _socket = Io.io('http://apiattach.framekarts.com:5643',
+       _socket = Io.io(PathApi.socketUri,
            Io.OptionBuilder()
                .setTransports(['websocket'])
                .setExtraHeaders({'foo': 'bar'})
@@ -77,6 +79,7 @@ class Socket_Provider with ChangeNotifier
     Provider.of<ListenerFilterProvider>(context,listen: false).setSocket(_socket!);
     print("reaching to selc Provider");
     Provider.of<SelfStoryProvider>(context,listen: false).setSocket(_socket!);
+    Provider.of<AnilisticsProvider>(context,listen: false).setSocket(_socket!);
     print("Self Provider stoy");
   }
 
@@ -91,6 +94,7 @@ class Socket_Provider with ChangeNotifier
     Provider.of<ChatListProvider>(context,listen: false).disconnectSocket();
     Provider.of<ListenerFilterProvider>(context,listen: false).disconnectSocket();
     Provider.of<SelfStoryProvider>(context,listen: false).disconnectSocket();
+    Provider.of<AnilisticsProvider>(context,listen: false).disconnectSocket();
     _connect = false;
     _socket = null;
 

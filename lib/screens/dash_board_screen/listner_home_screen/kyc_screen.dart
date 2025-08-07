@@ -7,6 +7,8 @@ import 'package:attach/componant/coustom_text_field.dart';
 import 'package:attach/componant/custome_action_button.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/path_configuration/navigation_paths.dart';
+import 'package:attach/providers/anylistics_provider.dart';
 import 'package:attach/providers/my_hleper.dart';
 import 'package:attach/providers/profileProvider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -232,6 +234,13 @@ class _KycScreenState extends State<KycScreen> {
     }
   }
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.kycScreen);
+  }
 
 
 

@@ -2,6 +2,8 @@
 import 'package:attach/componant/online_user_widget.dart';
 import 'package:attach/const/app_constante.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/path_configuration/navigation_paths.dart';
+import 'package:attach/providers/anylistics_provider.dart';
 import 'package:attach/providers/listener_filer_provider.dart';
 import 'package:attach/screens/home_sub_screen/ageRangeDailod.dart';
 import 'package:attach/screens/home_sub_screen/language%20dailoge.dart';
@@ -21,6 +23,7 @@ class _ListerFilterScreenState extends State<ListerFilterScreen> {
     // TODO: implement initState
     super.initState();
     Provider.of<ListenerFilterProvider>(context, listen: false).init(context);
+    Provider.of<AnilisticsProvider>(context, listen: false).createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.listerFilterScreen);
     _scrollController.addListener((){
       if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent)
         {

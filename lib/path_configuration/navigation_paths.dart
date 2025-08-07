@@ -9,6 +9,11 @@ class Screens
   static const String complitProfile = '/complitProfile';
   static const String languageScreen = '/languageScreen';
   static const String homeScreen = '/homeScreen';
+  static const String kycScreen = '/kycScreen';
+  static const String listerFilterScreen = '/listerFilterScreen';
+  static const String listnerHomeScreen = '/listnerHomeScreen';
+  static const String notificationScreen = '/notificationScreen';
+  static const String goOnlineDilog = '/goOnlineDilog';
 
 
   //story

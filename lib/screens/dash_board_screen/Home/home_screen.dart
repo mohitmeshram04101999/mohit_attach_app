@@ -6,6 +6,8 @@ import 'package:attach/const/app_constante.dart';
 import 'package:attach/modles/home_data_responce_model.dart';
 import 'package:attach/myfile/myast%20dart%20file.dart';
 import 'package:attach/myfile/screen_dimension.dart';
+import 'package:attach/path_configuration/navigation_paths.dart';
+import 'package:attach/providers/anylistics_provider.dart';
 import 'package:attach/providers/home_provider.dart';
 import 'package:attach/providers/home_provider_1.dart';
 import 'package:attach/screens/dash_board_screen/Home/hoem_story_widget.dart';
@@ -30,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.homeScreen);
 
   }
 
@@ -53,9 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Image.asset('assets/icons/home_icon/logo4-removebg-preview 1.png',width: SC.from_width(103),),
 
           actions: [
-            IconButton(onPressed: (){
-              RoutTo(context, child:(p0, p1) =>  ListerFilterScreen());
-            }, icon:Image.asset('assets/icons/home_icon/uil_search.png',width: SC.from_width(21),) ),
+            IconButton(onPressed: ()async{
+               await RoutTo(context, child:(p0, p1) =>  ListerFilterScreen());
+               createEvent(eventName: AnilisticsEvent.navigation, componentName: Screens.homeScreen);
+               }, icon:Image.asset('assets/icons/home_icon/uil_search.png',width: SC.from_width(21),) ),
 
             Consumer<HomeProvider>(
               builder: (context, p, child) => AspectRatio(
